@@ -3,15 +3,17 @@ import { StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import AppLoading from "expo-app-loading";
+import * as Font from "expo-font";
 export default function App() {
   const [loading, setLoading] = useState(true);
   const onFinish = () => {
     setLoading(false);
   };
   const preload = () => {
-    const fotToLoad = [Ionicons.font];
-
-    return Promise.all();
+    const fontsToLoad = [Ionicons.font];
+    const fontPromises = fontsToLoad.map((font) => Font.loadAsync(font));
+    //console.log(fontPromises);
+    return Promise.all(fontPromises);
   };
 
   if (loading) {
