@@ -5,7 +5,7 @@ const Login = ({ navigation }) => {
   return (
     <View>
       <Text>Login</Text>
-      <TouchableOpacity onPress={() => navigation.navigate("createAccount")}>
+      <TouchableOpacity onPress={() => navigation.navigate("CreateAccount")}>
         <View>
           <Text>Go to CreateAccount</Text>
         </View>
