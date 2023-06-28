@@ -18,7 +18,7 @@ const LoggedOutNav = () => {
       <Stack.Screen
         name="Welcome"
         options={{
-          title: "welcome baby",
+          headerShown: false,
         }}
         component={Welcome}
       />
