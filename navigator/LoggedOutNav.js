@@ -6,24 +6,33 @@ import Welcome from "../screens/Welcome";
 const Stack = createStackNavigator();
 const LoggedOutNav = () => {
   return (
-    <Stack.Navigator
-      mode="modal"
-      headerMode="screen"
-      screenOptions={{
-        title: "hello",
-        headerBackTitle: "prev",
-        headerTintColor: "green",
-      }}
-    >
+    <Stack.Navigator mode="modal" headerMode="screen" screenOptions={{}}>
       <Stack.Screen
         name="Welcome"
         options={{
           headerShown: false,
+          headerTitle: false,
         }}
         component={Welcome}
       />
-      <Stack.Screen name="Login" component={Login} />
-      <Stack.Screen name="CreateAccount" component={CreateAccount} />
+      <Stack.Screen
+        name="Login"
+        component={Login}
+        options={{
+          headerTitle: false,
+          headerTransparent: true,
+          headerTintColor: "#fff",
+        }}
+      />
+      <Stack.Screen
+        name="CreateAccount"
+        component={CreateAccount}
+        options={{
+          headerTitle: false,
+          headerTransparent: true,
+          headerTintColor: "#fff",
+        }}
+      />
     </Stack.Navigator>
   );
 };

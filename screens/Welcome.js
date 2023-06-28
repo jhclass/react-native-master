@@ -2,29 +2,8 @@ import React from "react";
 import styled from "styled-components/native";
 import { colors } from "../colors";
 import { TouchableOpacity } from "react-native-gesture-handler";
-const Container = styled.View`
-  flex: 1;
-  background-color: black;
-  align-items: center;
-  justify-content: center;
-`;
-
-const Logo = styled.Image`
-  max-width: 50%;
-  height: 150px;
-`;
-
-const CreateAccount = styled.View`
-  background-color: ${colors.blue};
-  padding: 10px 15px;
-  border-radius: 4px;
-`;
-
-const CreateAccountText = styled.Text`
-  color: white;
-  font-weight: 600;
-  font-size: 16px;
-`;
+import AuthLayout from "../components/auth/AuthLaytout";
+import AuthButton from "../components/auth/AuthButton";
 
 // web 과의 차이점 font속성의 상속
 const LoginLink = styled.Text`
@@ -43,19 +22,17 @@ const Welcome = ({ navigation }) => {
     navigation.navigate("Login");
   };
   return (
-    <Container>
-      <Logo resizeMode="contain" source={require("../assets/logo_color.png")} />
-      <TouchableOpacity>
-        <CreateAccount>
-          <CreateAccountText onPress={goToCreateAccount}>
-            Create Account
-          </CreateAccountText>
-        </CreateAccount>
-      </TouchableOpacity>
+    <AuthLayout>
+      <AuthButton
+        text="Create an account"
+        disabled={false}
+        onPress={goToCreateAccount}
+      />
+
       <TouchableOpacity>
         <LoginLink onPress={goToLogin}>Log in</LoginLink>
       </TouchableOpacity>
-    </Container>
+    </AuthLayout>
   );
 };
 
