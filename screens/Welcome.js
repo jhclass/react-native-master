@@ -29,8 +29,8 @@ const Welcome = ({ navigation }) => {
         onPress={goToCreateAccount}
       />
 
-      <TouchableOpacity>
-        <LoginLink onPress={goToLogin}>Log in</LoginLink>
+      <TouchableOpacity onPress={goToLogin}>
+        <LoginLink>Log in</LoginLink>
       </TouchableOpacity>
     </AuthLayout>
   );
