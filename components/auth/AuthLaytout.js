@@ -23,9 +23,6 @@ const Logo = styled.Image`
 `;
 
 export default function AuthLayout({ children }) {
-  const dismissKeyboard = () => {
-    Keyboard.dismiss();
-  };
   return (
     <TouchableWithoutFeedback
       style={{ flex: 1, backgroundColor: "#000" }}
@@ -33,6 +30,7 @@ export default function AuthLayout({ children }) {
         //alert("a");
         Keyboard.dismiss();
       }}
+      disabled={Platform.OS === "web"}
     >
       <Container>
         <KeyboardAvoidingView
