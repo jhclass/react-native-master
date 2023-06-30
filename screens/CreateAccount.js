@@ -1,15 +1,31 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import AuthLayout from "../components/auth/AuthLaytout";
 import AuthButton from "../components/auth/AuthButton";
 import { useForm } from "react-hook-form";
+import styled from "styled-components";
+import { colors } from "../colors";
 import {
   TextInputBox,
   AuthEmailButtonText,
   AuthEmailButton,
+  AuthNickButton,
 } from "../components/auth/AuthShared";
 
+const ErrMessage = styled.Text`
+  color: ${colors.red};
+  font-size: 12px;
+  margin-bottom: 10px;
+`;
 const CreateAccount = () => {
-  const { register, handleSubmit, watch, setValue } = useForm();
+  const [authEmail, setAuthEmail] = useState(false);
+  const [authNick, setAuthNick] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm();
 
   const onValid2 = (data) => {
     //alert("a");
@@ -17,11 +33,43 @@ const CreateAccount = () => {
   };
   useEffect(() => {
     // alert("a");
-    register("username");
-    register("password");
-    register("checkPassword");
-    register("firstName");
-    register("checkEmail");
+    register("username", {
+      required: true,
+      pattern: {
+        value: /^[a-z0-9]+$/i,
+        message: "영어소문자+숫자의 조합으로 만들어주세요.",
+      },
+    });
+    register("password", {
+      required: true,
+      pattern: {
+        value: /^(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-z0-9!@#$%^&*]+$/,
+        message: "적어도 한개의 특수문자와 숫자, 영어 소문자를 포함해야합니다.",
+      },
+      minLength: {
+        value: 6,
+        message: "비밀번호는 6자 이상이어야합니다.",
+      },
+    });
+    register("checkPassword", { required: true });
+    register("firstName", {
+      required: "이름 또는 별명을 입력하세요.",
+      minLength: {
+        value: 2,
+        message: "이름 또는 별명을 입력하세요.",
+      },
+      pattern: {
+        value: /^[a-zA-Z0-9가-힣]+$/,
+        message: "특수문자는 사용할 수 없습니다.",
+      },
+    });
+    register("checkEmail", {
+      required: "이메일을 입력하여주세요.",
+      pattern: {
+        value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+        message: "이메일 형식이 잘못되었습니다.",
+      },
+    });
   }, [register]);
   //console.log(watch());
   const usernameRef = useRef();
@@ -51,21 +99,30 @@ const CreateAccount = () => {
         name="username"
         onChangeText={(text) => setValue("username", text)}
       />
+      {errors?.username && (
+        <ErrMessage style={{ color: "red" }}>
+          {errors.username.message}
+        </ErrMessage>
+      )}
       <TextInputBox
         ref={passwordRef}
         placeholder="패스워드"
         placeholderTextColor={"rgba(255,255,255,0.8)"}
         returnKeyType="next"
+        secureTextEntry={true}
         onSubmitEditing={() => onNext(checkPasswordRef)}
-        {...register("password", { required: true })}
-        name="password"
         onChangeText={(text) => setValue("password", text)}
       />
-
+      {errors?.password && (
+        <ErrMessage style={{ color: "red" }}>
+          {errors.password.message}
+        </ErrMessage>
+      )}
       <TextInputBox
         placeholder="패스워드 확인"
         placeholderTextColor={"rgba(255,255,255,0.8)"}
         returnKeyType="next"
+        secureTextEntry={true}
         ref={checkPasswordRef}
         onSubmitEditing={() => onNext(firstnameNameRef)}
         {...register("checkPassword", { required: true })}
@@ -83,8 +140,17 @@ const CreateAccount = () => {
         name="firstName"
         onChangeText={(text) => setValue("firstName", text)}
       />
+      {errors?.firstName && (
+        <ErrMessage style={{ color: "red" }}>
+          {errors.firstName.message}
+        </ErrMessage>
+      )}
+      <AuthNickButton onPress={() => null}>
+        <AuthEmailButtonText style={{ color: "#fff" }}>
+          중복체크
+        </AuthEmailButtonText>
+      </AuthNickButton>
       <TextInputBox
-        last
         placeholder="이메일 (E-mail)"
         placeholderTextColor={"rgba(255,255,255,0.8)"}
         returnKeyType="done"
@@ -95,7 +161,11 @@ const CreateAccount = () => {
         // onSubmitEditing={() => onDone}
         onChangeText={(text) => setValue("checkEmail", text)}
       />
-
+      {errors?.checkEmail && (
+        <ErrMessage style={{ color: "red" }}>
+          {errors.checkEmail.message}
+        </ErrMessage>
+      )}
       <AuthEmailButton onPress={() => null}>
         <AuthEmailButtonText style={{ color: "#fff" }}>
           이메일 인증

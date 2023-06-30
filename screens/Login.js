@@ -12,8 +12,8 @@ const Login = () => {
   };
   //console.log(watch());
   useEffect(() => {
-    register("username");
-    register("password");
+    register("username", { required: true });
+    register("password", { required: true });
   }, [register]);
 
   const usernameRef = useRef();
@@ -31,8 +31,6 @@ const Login = () => {
       <TextInputBox
         ref={usernameRef}
         first
-        {...register("username", { required: true })}
-        name="username"
         placeholder="아이디"
         placeholderTextColor={"rgba(255,255,255,0.8)"}
         returnKeyType="next"
@@ -43,7 +41,6 @@ const Login = () => {
       <TextInputBox
         lastButton
         ref={passwordRef}
-        {...register("password", { required: true })}
         placeholder="패스워드"
         placeholderTextColor={"rgba(255,255,255,0.8)"}
         returnKeyType="done"

@@ -1,6 +1,13 @@
 import styled, { css } from "styled-components/native";
 import { colors } from "../../colors";
 
+export const AuthNickButton = styled.TouchableOpacity`
+  margin-bottom: 10px;
+  width: 100%;
+  padding: 10px 0;
+  background-color: ${colors.red};
+  border-radius: 4px;
+`;
 export const AuthEmailButton = styled.TouchableOpacity`
   margin-bottom: 20px;
   width: 100%;
