@@ -13,7 +13,7 @@ export const isLoggedInVar = makeVar(false);
 // });
 // Initialize Apollo Client
 const client = new ApolloClient({
-  uri: "https://c1cb-61-75-87-148.ngrok-free.app/graphql",
+  uri: "https://0311-61-75-87-148.ngrok-free.app/graphql",
   cache: new InMemoryCache(),
 });
 

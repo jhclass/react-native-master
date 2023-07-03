@@ -10,13 +10,59 @@ import {
   AuthEmailButton,
   AuthNickButton,
 } from "../components/auth/AuthShared";
+import { gql } from "@apollo/client";
+import { useMutation } from "@apollo/client";
+
+const CREATE_ACOUNT_MUTATION = gql`
+  mutation createAccount(
+    $firstName: String!
+    $username: String!
+    $email: String!
+    $password: String!
+  ) {
+    createAccount(
+      firstName: $firstName
+      username: $username
+      email: $email
+      password: $password
+    ) {
+      ok
+      error
+    }
+  }
+`;
 
 const ErrMessage = styled.Text`
   color: ${colors.red};
   font-size: 12px;
   margin-bottom: 10px;
 `;
-const CreateAccount = () => {
+const CreateAccount = ({ navigation }) => {
+  const [createAccountMutation, { loading, error }] = useMutation(
+    CREATE_ACOUNT_MUTATION,
+    {
+      onCompleted: (data) => {
+        console.log(data);
+        const {
+          createAccount: { ok, error },
+        } = data;
+        if (ok) {
+          //회원가입 완료
+          // const goToCreateAccount = () => {
+          //   navigation.navigate("CreateAccount");
+          // };
+          // 추후 회원가입 이동페이지로 이동
+          // 현재는 로그인으로 이동.
+          navigation.navigate("Login", {
+            username: getValues("username"),
+            password: getValues("password"),
+          });
+
+          //로그인
+        }
+      },
+    }
+  );
   const [authEmail, setAuthEmail] = useState(false);
   const [authNick, setAuthNick] = useState(false);
   const {
@@ -24,12 +70,21 @@ const CreateAccount = () => {
     handleSubmit,
     watch,
     setValue,
+    getValues,
     formState: { errors },
   } = useForm();
 
   const onValid2 = (data) => {
     //alert("a");
     console.log(data);
+    createAccountMutation({
+      variables: {
+        firstName: data.firstName,
+        username: data.username,
+        email: data.checkEmail,
+        password: data.password,
+      },
+    });
   };
   useEffect(() => {
     // alert("a");
@@ -174,8 +229,14 @@ const CreateAccount = () => {
 
       <AuthButton
         text="회원가입"
-        disabled={false}
-        loading={true}
+        disabled={
+          !watch("username") ||
+          !watch("password") ||
+          !watch("checkPassword") ||
+          !watch("firstName") ||
+          !watch("checkEmail")
+        }
+        loading={loading}
         onPress={handleSubmit(onValid2)}
       />
     </AuthLayout>

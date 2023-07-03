@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import AuthLayout from "../components/auth/AuthLaytout";
 import AuthButton from "../components/auth/AuthButton";
@@ -6,6 +6,7 @@ import { TextInputBox } from "../components/auth/AuthShared";
 import { useForm } from "react-hook-form";
 import { gql, useMutation } from "@apollo/client";
 import { isLoggedInVar } from "../apollo";
+import { View, Text } from "react-native";
 
 const LOG_IN_MUTATION = gql`
   mutation login($username: String!, $password: String!) {
@@ -17,7 +18,9 @@ const LOG_IN_MUTATION = gql`
   }
 `;
 
-const Login = () => {
+const Login = ({ route }) => {
+  console.log(route);
+  const [loginError, setLoginError] = useState("");
   const [logInMutation, { loading }] = useMutation(LOG_IN_MUTATION, {
     onCompleted: (data) => {
       console.log(data, "데이터");
@@ -32,24 +35,25 @@ const Login = () => {
       console.log(ok);
       if (ok) {
         isLoggedInVar(true);
+      } else {
+        setLoginError("아이디 또는 비밀번호를 다시 확인하여주세요.");
       }
     },
   });
-  //console.log(data);
-  // if (loading) return <p>로딩중...</p>;
-  // if (error) return <p>로그인에 실패했습니다.</p>;
-  // if (!data) return <p>로그인에 실패했습니다.</p>;
-  // console.log(data.login);
-  // console.log(data.login.ok);
-  // console.log(data.login.error);
-  // console.log(data.login.token);
+
   const {
     register,
     handleSubmit,
     watch,
     setValue,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      username: route?.params?.username || null,
+      password: route?.params?.password || null,
+    },
+  });
+
   const onVaild = (data) => {
     console.log(data);
     if (!loading) {
@@ -80,7 +84,13 @@ const Login = () => {
   };
   return (
     <AuthLayout>
+      {loginError ? (
+        <View>
+          <Text style={{ color: "#fff" }}>{loginError}</Text>
+        </View>
+      ) : null}
       <TextInputBox
+        value={watch("username")}
         ref={usernameRef}
         first
         placeholder="아이디"
@@ -91,6 +101,7 @@ const Login = () => {
         autoCapitalize="none"
       />
       <TextInputBox
+        value={watch("password")}
         lastButton
         ref={passwordRef}
         placeholder="패스워드"
@@ -98,6 +109,7 @@ const Login = () => {
         returnKeyType="done"
         onSubmitEditing={handleSubmit(onVaild)}
         onChangeText={(text) => setValue("password", text)}
+        secureTextEntry={true}
       />
 
       <AuthButton
