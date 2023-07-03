@@ -5,6 +5,7 @@ import AppLoading from "expo-app-loading";
 import * as Font from "expo-font";
 import { Asset } from "expo-asset";
 import LoggedOutNav from "./navigator/LoggedOutNav";
+import { LoggedInNav } from "./navigator/loogedInNav";
 
 import {
   DarkTheme,
@@ -12,12 +13,21 @@ import {
   DefaultTheme,
 } from "@react-navigation/native";
 import { ThemeProvider } from "styled-components/native";
+import { ApolloProvider, useReactiveVar } from "@apollo/client";
+import client, { isLoggedInVar } from "./apollo";
 
 export default function App() {
   const [loading, setLoading] = useState(true);
   const onFinish = () => {
     setLoading(false);
   };
+  const isLoggedIn = useReactiveVar(isLoggedInVar);
+  const colorScheme = useColorScheme();
+
+  useEffect(() => {
+    console.log("Current theme:", colorScheme);
+  }, [colorScheme]);
+
   const preload = () => {
     const fontsToLoad = [Ionicons.font];
     const fontPromises = fontsToLoad.map((font) => Font.loadAsync(font));
@@ -28,12 +38,6 @@ export default function App() {
     const imagePromises = imagesToLoad.map((image) => Asset.loadAsync(image));
     return Promise.all([...fontPromises, ...imagePromises]);
   };
-
-  const colorScheme = useColorScheme();
-
-  useEffect(() => {
-    console.log("Current theme:", colorScheme);
-  }, [colorScheme]);
 
   const colorScheme2 = Appearance.getColorScheme();
   if (colorScheme2 === "dark") {
@@ -60,8 +64,10 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer>
-      <LoggedOutNav />
-    </NavigationContainer>
+    <ApolloProvider client={client}>
+      <NavigationContainer>
+        {isLoggedIn ? <LoggedInNav /> : <LoggedOutNav />}
+      </NavigationContainer>
+    </ApolloProvider>
   );
 }

@@ -175,6 +175,7 @@ const CreateAccount = () => {
       <AuthButton
         text="회원가입"
         disabled={false}
+        loading={true}
         onPress={handleSubmit(onValid2)}
       />
     </AuthLayout>
