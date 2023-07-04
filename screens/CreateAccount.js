@@ -64,7 +64,8 @@ const CreateAccount = ({ navigation }) => {
     }
   );
   const [authEmail, setAuthEmail] = useState(false);
-  const [authNick, setAuthNick] = useState(false);
+  const [checkNick, setCheickNick] = useState(false);
+  const [checkUsername, setCheckUsername] = useState(false);
   const {
     register,
     handleSubmit,
@@ -76,6 +77,16 @@ const CreateAccount = ({ navigation }) => {
 
   const onValid2 = (data) => {
     //alert("a");
+    if (!authEmail) {
+      alert("이메일 인증을 해주세요.");
+      return;
+    } else if (!checkNick) {
+      alert("이름 or 닉네임 중복체크를 해주세요.");
+      return;
+    } else if (!checkUsername) {
+      alert("아이디 중복체크를 해주세요.");
+      return;
+    }
     console.log(data);
     createAccountMutation({
       variables: {
@@ -159,6 +170,11 @@ const CreateAccount = ({ navigation }) => {
           {errors.username.message}
         </ErrMessage>
       )}
+      <AuthNickButton onPress={() => null}>
+        <AuthEmailButtonText style={{ color: "#fff" }}>
+          중복체크
+        </AuthEmailButtonText>
+      </AuthNickButton>
       <TextInputBox
         ref={passwordRef}
         placeholder="패스워드"
@@ -221,9 +237,20 @@ const CreateAccount = ({ navigation }) => {
           {errors.checkEmail.message}
         </ErrMessage>
       )}
+      <TextInputBox
+        placeholder="인증번호 입력"
+        placeholderTextColor={"rgba(255,255,255,0.8)"}
+        returnKeyType="done"
+        keyboardType="numeric"
+        ref={emailRef}
+        {...register("sendNumber", { required: true })}
+        name="sendNumber"
+        // onSubmitEditing={() => onDone}
+        onChangeText={(text) => setValue("sendNumber", text)}
+      />
       <AuthEmailButton onPress={() => null}>
         <AuthEmailButtonText style={{ color: "#fff" }}>
-          이메일 인증
+          이메일 인증번호 발송
         </AuthEmailButtonText>
       </AuthEmailButton>
 
