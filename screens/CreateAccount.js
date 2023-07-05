@@ -13,17 +13,19 @@ import {
 const EmailAuthOkWrap = styled.View`
   width: 100%;
   margin-bottom: 20px;
+  position: relative;
 `;
 const EmailAuthOkButton = styled.TouchableOpacity`
   width: 60px;
-  height: 40px;
+  height: 50px;
   background: ${colors.blue};
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 0px;
+  right: 0px;
   display: flex;
   justify-content: center;
   align-items: center;
+  border-radius: 0 4px 4px 0;
 `;
 const EmailAuthOkButtonText = styled.Text`
   color: #fff;
@@ -123,10 +125,15 @@ const CreateAccount = ({ navigation }) => {
       onCompleted: (data) => {
         console.log(data);
         const {
-          authEmail: { code },
+          authEmail: { code, ok, message },
         } = data;
-        setCodeNum(code);
-        console.log(codeNum);
+        if (ok) {
+          setCodeNum(code);
+          // console.log(codeNum);
+          alert(message);
+        } else {
+          alert(message);
+        }
       },
     }
   );
@@ -136,12 +143,18 @@ const CreateAccount = ({ navigation }) => {
       alert("이메일을 입력하여주세요.");
       return;
     }
-    //console.log(value);
-    checkEmailMutation({
-      variables: {
-        emailAdd: value,
-      },
-    });
+    const emailRegx = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (emailRegx.test(value)) {
+      //console.log(value);
+      checkEmailMutation({
+        variables: {
+          emailAdd: value,
+        },
+      });
+    } else {
+      alert("이메일이 정확하지 않습니다.");
+      return;
+    }
   };
   const checkNickFunc = (value) => {
     if (value === undefined || value === null || value === "") {
@@ -276,7 +289,7 @@ const CreateAccount = ({ navigation }) => {
   const usernameRef = useRef();
   const passwordRef = useRef();
   const checkPasswordRef = useRef();
-  const firstnameNameRef = useRef();
+  const firstNameRef = useRef();
   const emailRef = useRef();
 
   const onNext = (nextOne) => {
@@ -294,7 +307,7 @@ const CreateAccount = ({ navigation }) => {
         placeholder="아이디"
         placeholderTextColor={"rgba(255,255,255,0.8)"}
         returnKeyType="next"
-        onSubmitEditing={() => onNext(passwordRef)}
+        onSubmitEditing={() => checkUserFunc(getValues("username"))}
         autoCapitalize="none"
         {...register("username", { required: true })}
         name="username"
@@ -316,7 +329,7 @@ const CreateAccount = ({ navigation }) => {
         placeholderTextColor={"rgba(255,255,255,0.8)"}
         returnKeyType="next"
         secureTextEntry={true}
-        onSubmitEditing={() => onNext(checkPasswordRef)}
+        onSubmitEditing={onNext(() => checkPasswordRef)}
         onChangeText={(text) => setValue("password", text)}
       />
       {errors?.password && (
@@ -330,7 +343,7 @@ const CreateAccount = ({ navigation }) => {
         returnKeyType="next"
         secureTextEntry={true}
         ref={checkPasswordRef}
-        onSubmitEditing={() => onNext(firstnameNameRef)}
+        onSubmitEditing={onNext(firstNameRef)}
         {...register("checkPassword", { required: true })}
         name="checkPassword"
         onChangeText={(text) => setValue("checkPassword", text)}
@@ -340,8 +353,8 @@ const CreateAccount = ({ navigation }) => {
         placeholder="이름 or 닉네임"
         placeholderTextColor={"rgba(255,255,255,0.8)"}
         returnKeyType="next"
-        ref={firstnameNameRef}
-        onSubmitEditing={() => onNext(emailRef)}
+        ref={firstNameRef}
+        onSubmitEditing={() => checkNickFunc(getValues("firstName"))}
         {...register("firstName", { required: true })}
         name="firstName"
         onChangeText={(text) => setValue("firstName", text)}
@@ -364,7 +377,7 @@ const CreateAccount = ({ navigation }) => {
         ref={emailRef}
         {...register("checkEmail", { required: true })}
         name="checkEmail"
-        // onSubmitEditing={() => onDone}
+        onSubmitEditing={() => checkEmailFunc(getValues("checkEmail"))}
         onChangeText={(text) => setValue("checkEmail", text)}
       />
       {errors?.checkEmail && (
