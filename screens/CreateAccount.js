@@ -10,8 +10,52 @@ import {
   AuthEmailButton,
   AuthNickButton,
 } from "../components/auth/AuthShared";
+const EmailAuthOkWrap = styled.View`
+  width: 100%;
+  margin-bottom: 20px;
+`;
+const EmailAuthOkButton = styled.TouchableOpacity`
+  width: 60px;
+  height: 40px;
+  background: ${colors.blue};
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+const EmailAuthOkButtonText = styled.Text`
+  color: #fff;
+`;
 import { gql } from "@apollo/client";
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
+const CHECK_NICK_MUTATION = gql`
+  mutation ($nick: String!) {
+    checkNick(nick: $nick) {
+      ok
+      message
+    }
+  }
+`;
+const CHECK_USERNAME_MUTATION = gql`
+  mutation ($temporaryUser: String!) {
+    checkUser(temporaryUser: $temporaryUser) {
+      ok
+      message
+    }
+  }
+`;
+
+const CHECK_EMAIL_MUTATION = gql`
+  mutation emailAuth($emailAdd: String!) {
+    authEmail(emailAdd: $emailAdd) {
+      ok
+      message
+      code
+    }
+  }
+`;
 
 const CREATE_ACOUNT_MUTATION = gql`
   mutation createAccount(
@@ -38,6 +82,92 @@ const ErrMessage = styled.Text`
   margin-bottom: 10px;
 `;
 const CreateAccount = ({ navigation }) => {
+  const [checkNickMutation, { loading: checkNickLoading }] = useMutation(
+    CHECK_NICK_MUTATION,
+    {
+      onCompleted: (data) => {
+        //console.log(data);
+        const {
+          checkNick: { ok, message },
+        } = data;
+        alert(message);
+        if (ok) {
+          setCheckNick(ok);
+        } else {
+          setCheckNick(ok);
+        }
+      },
+    }
+  );
+
+  const [checkUserMutation, { loading: checkUserLoading }] = useMutation(
+    CHECK_USERNAME_MUTATION,
+    {
+      onCompleted: (data) => {
+        //console.log(data);
+        const {
+          checkUser: { ok, message },
+        } = data;
+        alert(message);
+        if (ok) {
+          setCheckUsername(ok);
+        } else {
+          setCheckUsername(ok);
+        }
+      },
+    }
+  );
+  const [checkEmailMutation, { loading: checkEmailLoading }] = useMutation(
+    CHECK_EMAIL_MUTATION,
+    {
+      onCompleted: (data) => {
+        console.log(data);
+        const {
+          authEmail: { code },
+        } = data;
+        setCodeNum(code);
+        console.log(codeNum);
+      },
+    }
+  );
+
+  const checkEmailFunc = (value) => {
+    if (value === undefined || value === null || value === "") {
+      alert("이메일을 입력하여주세요.");
+      return;
+    }
+    //console.log(value);
+    checkEmailMutation({
+      variables: {
+        emailAdd: value,
+      },
+    });
+  };
+  const checkNickFunc = (value) => {
+    if (value === undefined || value === null || value === "") {
+      alert("이름 또는 닉네임을 입력하여주세요.");
+      return;
+    }
+    //console.log(value);
+    checkNickMutation({
+      variables: {
+        nick: value,
+      },
+    });
+  };
+
+  const checkUserFunc = (value) => {
+    if (value === undefined || value === null || value === "") {
+      alert("아이디를 입력하여주세요.");
+      return;
+    }
+    console.log(value);
+    checkUserMutation({
+      variables: {
+        temporaryUser: value,
+      },
+    });
+  };
   const [createAccountMutation, { loading, error }] = useMutation(
     CREATE_ACOUNT_MUTATION,
     {
@@ -47,24 +177,17 @@ const CreateAccount = ({ navigation }) => {
           createAccount: { ok, error },
         } = data;
         if (ok) {
-          //회원가입 완료
-          // const goToCreateAccount = () => {
-          //   navigation.navigate("CreateAccount");
-          // };
-          // 추후 회원가입 이동페이지로 이동
-          // 현재는 로그인으로 이동.
           navigation.navigate("Login", {
             username: getValues("username"),
             password: getValues("password"),
           });
-
-          //로그인
         }
       },
     }
   );
+  const [codeNum, setCodeNum] = useState("");
   const [authEmail, setAuthEmail] = useState(false);
-  const [checkNick, setCheickNick] = useState(false);
+  const [checkNick, setCheckNick] = useState(false);
   const [checkUsername, setCheckUsername] = useState(false);
   const {
     register,
@@ -96,6 +219,18 @@ const CreateAccount = ({ navigation }) => {
         password: data.password,
       },
     });
+  };
+  const compareEmailOk = (value) => {
+    console.log(codeNum, value);
+    if (String(codeNum) === value) {
+      // 동일함.
+      alert("인증이 완료되었습니다.");
+      setAuthEmail(true);
+    } else {
+      alert("인증번호가 다릅니다. 다시 확인하여주세요.");
+      setAuthEmail(false);
+      return;
+    }
   };
   useEffect(() => {
     // alert("a");
@@ -170,7 +305,7 @@ const CreateAccount = ({ navigation }) => {
           {errors.username.message}
         </ErrMessage>
       )}
-      <AuthNickButton onPress={() => null}>
+      <AuthNickButton onPress={() => checkUserFunc(getValues("username"))}>
         <AuthEmailButtonText style={{ color: "#fff" }}>
           중복체크
         </AuthEmailButtonText>
@@ -216,7 +351,7 @@ const CreateAccount = ({ navigation }) => {
           {errors.firstName.message}
         </ErrMessage>
       )}
-      <AuthNickButton onPress={() => null}>
+      <AuthNickButton onPress={() => checkNickFunc(getValues("firstName"))}>
         <AuthEmailButtonText style={{ color: "#fff" }}>
           중복체크
         </AuthEmailButtonText>
@@ -237,22 +372,30 @@ const CreateAccount = ({ navigation }) => {
           {errors.checkEmail.message}
         </ErrMessage>
       )}
-      <TextInputBox
-        placeholder="인증번호 입력"
-        placeholderTextColor={"rgba(255,255,255,0.8)"}
-        returnKeyType="done"
-        keyboardType="numeric"
-        ref={emailRef}
-        {...register("sendNumber", { required: true })}
-        name="sendNumber"
-        // onSubmitEditing={() => onDone}
-        onChangeText={(text) => setValue("sendNumber", text)}
-      />
-      <AuthEmailButton onPress={() => null}>
+
+      <AuthEmailButton onPress={() => checkEmailFunc(getValues("checkEmail"))}>
         <AuthEmailButtonText style={{ color: "#fff" }}>
           이메일 인증번호 발송
         </AuthEmailButtonText>
       </AuthEmailButton>
+      <EmailAuthOkWrap>
+        <TextInputBox
+          placeholder="인증번호 입력"
+          placeholderTextColor={"rgba(255,255,255,0.8)"}
+          returnKeyType="done"
+          keyboardType="numeric"
+          ref={emailRef}
+          {...register("sendNumber", { required: true })}
+          name="sendNumber"
+          // onSubmitEditing={() => onDone}
+          onChangeText={(text) => setValue("sendNumber", text)}
+        />
+        <EmailAuthOkButton
+          onPress={() => compareEmailOk(getValues("sendNumber"))}
+        >
+          <EmailAuthOkButtonText>확인</EmailAuthOkButtonText>
+        </EmailAuthOkButton>
+      </EmailAuthOkWrap>
 
       <AuthButton
         text="회원가입"
