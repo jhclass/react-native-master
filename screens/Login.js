@@ -5,7 +5,7 @@ import AuthButton from "../components/auth/AuthButton";
 import { TextInputBox } from "../components/auth/AuthShared";
 import { useForm } from "react-hook-form";
 import { gql, useMutation } from "@apollo/client";
-import { isLoggedInVar } from "../apollo";
+import { isLoggedInVar, logUserIn } from "../apollo";
 import { View, Text } from "react-native";
 
 const LOG_IN_MUTATION = gql`
@@ -22,10 +22,10 @@ const Login = ({ route }) => {
   console.log(route);
   const [loginError, setLoginError] = useState("");
   const [logInMutation, { loading }] = useMutation(LOG_IN_MUTATION, {
-    onCompleted: (data) => {
+    onCompleted: async (data) => {
       console.log(data, "데이터");
       const {
-        login: { ok, error },
+        login: { ok, error, token },
       } = data;
       // if (ok) {
       //   localStorage.setItem("token", data.login.token);
@@ -34,7 +34,7 @@ const Login = ({ route }) => {
       // }
       console.log(ok);
       if (ok) {
-        isLoggedInVar(true);
+        await logUserIn(token);
       } else {
         setLoginError("아이디 또는 비밀번호를 다시 확인하여주세요.");
       }

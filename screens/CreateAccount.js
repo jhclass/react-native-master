@@ -25,7 +25,6 @@ const EmailAuthOkButton = styled.TouchableOpacity`
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 0 4px 4px 0;
 `;
 const EmailAuthOkButtonText = styled.Text`
   color: #fff;

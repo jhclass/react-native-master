@@ -6,7 +6,7 @@ import * as Font from "expo-font";
 import { Asset } from "expo-asset";
 import LoggedOutNav from "./navigator/LoggedOutNav";
 import { LoggedInNav } from "./navigator/loogedInNav";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   DarkTheme,
   NavigationContainer,
@@ -14,7 +14,7 @@ import {
 } from "@react-navigation/native";
 import { ThemeProvider } from "styled-components/native";
 import { ApolloProvider, useReactiveVar } from "@apollo/client";
-import client, { isLoggedInVar } from "./apollo";
+import client, { isLoggedInVar, tokenVar } from "./apollo";
 
 export default function App() {
   const [loading, setLoading] = useState(true);
@@ -27,8 +27,7 @@ export default function App() {
   useEffect(() => {
     console.log("Current theme:", colorScheme);
   }, [colorScheme]);
-
-  const preload = () => {
+  const preloadAssets = () => {
     const fontsToLoad = [Ionicons.font];
     const fontPromises = fontsToLoad.map((font) => Font.loadAsync(font));
     const imagesToLoad = [
@@ -37,6 +36,15 @@ export default function App() {
     ];
     const imagePromises = imagesToLoad.map((image) => Asset.loadAsync(image));
     return Promise.all([...fontPromises, ...imagePromises]);
+  };
+  const preload = async () => {
+    const token = await AsyncStorage.getItem("token");
+    console.log(token, "스토리지");
+    if (token) {
+      isLoggedInVar(true);
+      tokenVar(token);
+    }
+    return preloadAssets();
   };
 
   const colorScheme2 = Appearance.getColorScheme();
