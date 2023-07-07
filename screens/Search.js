@@ -9,7 +9,7 @@ const logoutFunc = async () => {
   tokenVar("");
   isLoggedInVar(false);
 };
-const Feed = () => {
+const Search = () => {
   return (
     <View
       style={{
@@ -23,10 +23,10 @@ const Feed = () => {
         <Text style={{ color: "#fff" }}>로그아웃</Text>
       </TouchableOpacity>
       <View>
-        <Text style={{ color: "#fff" }}>FEED</Text>
+        <Text style={{ color: "#fff" }}>SEARCH</Text>
       </View>
     </View>
   );
 };
 
-export default Feed;
+export default Search;

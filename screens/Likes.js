@@ -1,3 +1,4 @@
+import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { tokenVar, isLoggedInVar } from "../apollo";
@@ -9,7 +10,7 @@ const logoutFunc = async () => {
   tokenVar("");
   isLoggedInVar(false);
 };
-const Feed = () => {
+const Likes = () => {
   return (
     <View
       style={{
@@ -23,10 +24,10 @@ const Feed = () => {
         <Text style={{ color: "#fff" }}>로그아웃</Text>
       </TouchableOpacity>
       <View>
-        <Text style={{ color: "#fff" }}>FEED</Text>
+        <Text style={{ color: "#fff" }}>Likes</Text>
       </View>
     </View>
   );
 };
 
-export default Feed;
+export default Likes;

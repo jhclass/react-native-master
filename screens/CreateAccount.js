@@ -13,18 +13,18 @@ import {
 const EmailAuthOkWrap = styled.View`
   width: 100%;
   margin-bottom: 20px;
-  position: relative;
+
+  background-color: "#fff";
 `;
 const EmailAuthOkButton = styled.TouchableOpacity`
-  width: 60px;
-  height: 50px;
+  padding: 13px 16px;
   background: ${colors.blue};
-  position: absolute;
-  top: 0px;
-  right: 0px;
+
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 16px;
+  border-radius: 4px;
 `;
 const EmailAuthOkButtonText = styled.Text`
   color: #fff;
