@@ -1,4 +1,3 @@
-import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { tokenVar, isLoggedInVar } from "../apollo";
@@ -10,7 +9,7 @@ const logoutFunc = async () => {
   tokenVar("");
   isLoggedInVar(false);
 };
-const Notification = () => {
+const Me = () => {
   return (
     <View
       style={{
@@ -24,10 +23,10 @@ const Notification = () => {
         <Text style={{ color: "#fff" }}>로그아웃</Text>
       </TouchableOpacity>
       <View>
-        <Text style={{ color: "#fff" }}>Notification</Text>
+        <Text style={{ color: "#fff" }}>Its Me!</Text>
       </View>
     </View>
   );
 };
 
-export default Notification;
+export default Me;

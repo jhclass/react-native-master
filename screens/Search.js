@@ -9,7 +9,7 @@ const logoutFunc = async () => {
   tokenVar("");
   isLoggedInVar(false);
 };
-const Search = () => {
+const Search = ({ navigation }) => {
   return (
     <View
       style={{
@@ -23,8 +23,11 @@ const Search = () => {
         <Text style={{ color: "#fff" }}>로그아웃</Text>
       </TouchableOpacity>
       <View>
-        <Text style={{ color: "#fff" }}>SEARCH</Text>
+        <Text style={{ color: "#fff" }}>SEARCH!</Text>
       </View>
+      <TouchableOpacity onPress={() => navigation.navigate("Photo")}>
+        <Text style={{ color: "#fff" }}>Photo</Text>
+      </TouchableOpacity>
     </View>
   );
 };
