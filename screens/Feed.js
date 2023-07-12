@@ -9,7 +9,7 @@ const logoutFunc = async () => {
   tokenVar("");
   isLoggedInVar(false);
 };
-const Feed = () => {
+const Feed = ({ navigation }) => {
   return (
     <View
       style={{
@@ -25,6 +25,9 @@ const Feed = () => {
       <View>
         <Text style={{ color: "#fff" }}>FEED</Text>
       </View>
+      <TouchableOpacity onPress={() => navigation.navigate("Photo")}>
+        <Text style={{ color: "#fff" }}>Photo</Text>
+      </TouchableOpacity>
     </View>
   );
 };

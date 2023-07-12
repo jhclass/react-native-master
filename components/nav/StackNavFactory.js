@@ -1,4 +1,5 @@
 import { createStackNavigator } from "@react-navigation/stack";
+import Ionicons from "react-native-vector-icons/Ionicons";
 import React from "react";
 import Photo from "../../screens/Photo";
 import Notification from "../../screens/Notification";
@@ -9,7 +10,23 @@ import Me from "../../screens/Me";
 const Stack = createStackNavigator();
 export default function StackNavFactory({ screenName }) {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        headerBackTitleVisuble: false,
+        headerTitleAlign: "center",
+        headerTintColor: "white",
+        headerBackImage: () => (
+          <Ionicons name="chevron-back-outline" size={20} color="white" />
+        ),
+        headerStyle: {
+          borderBottomWidth: 1, // 하단 테두리 두께 (android) 안드로이드 적용 O
+          borderBottomColor: "rgba(212,38,67,0.4)", // 하단 테두리 색상 (android) 안드로이드 적용o
+          //borderBottomColor: "rgba(255,255,255,0.3)", //ios 만 적용
+          //shadowColor: "#fff", //ios 만 적용
+          backgroundColor: "black",
+        },
+      }}
+    >
       {screenName === "Feed" ? (
         <Stack.Screen name={"Feed"} component={Feed} />
       ) : null}
