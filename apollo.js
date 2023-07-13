@@ -4,6 +4,7 @@ import {
   createHttpLink,
   makeVar,
 } from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const isLoggedInVar = makeVar(false);
@@ -22,9 +23,22 @@ export const logUserIn = async (token) => {
   ]);
   isLoggedInVar(true);
 };
+//백엔드에 토큰을 공유하고 있지 않음.
 
+const httpLink = createHttpLink({
+  uri: "https://4646-61-75-87-148.ngrok-free.app/graphql",
+});
+
+const authLink = setContext((_, { headers }) => {
+  return {
+    headers: {
+      ...headers,
+      token: tokenVar(),
+    },
+  };
+});
 const client = new ApolloClient({
-  uri: "https://0311-61-75-87-148.ngrok-free.app/graphql",
+  link: authLink.concat(httpLink),
   cache: new InMemoryCache(),
 });
 

@@ -7,10 +7,12 @@ import Feed from "../../screens/Feed";
 import Profile from "../../screens/Profile";
 import Search from "../../screens/Search";
 import Me from "../../screens/Me";
+import { Image } from "react-native";
 const Stack = createStackNavigator();
 export default function StackNavFactory({ screenName }) {
   return (
     <Stack.Navigator
+      headerMode="screen"
       screenOptions={{
         headerBackTitleVisuble: false,
         headerTitleAlign: "center",
@@ -28,7 +30,18 @@ export default function StackNavFactory({ screenName }) {
       }}
     >
       {screenName === "Feed" ? (
-        <Stack.Screen name={"Feed"} component={Feed} />
+        <Stack.Screen
+          name={"Feed"}
+          component={Feed}
+          options={{
+            headerTitle: () => (
+              <Image
+                source={require("../../assets/logo_color.png")}
+                style={{ maxHeight: 30, maxWidth: 100 }}
+              />
+            ),
+          }}
+        />
       ) : null}
       {screenName === "Search" ? (
         <Stack.Screen name={"Search"} component={Search} />
