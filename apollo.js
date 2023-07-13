@@ -28,11 +28,10 @@ export const logoutFunc = async () => {
   //console.log("aaaa");
   const keys = ["token", "loggedIn"];
   await AsyncStorage.multiRemove(keys);
-  tokenVar(null);
+  tokenVar("");
   isLoggedInVar(false);
 };
 
-//백엔드에 토큰을 공유하고 있지 않음.
 const httpLink = createHttpLink({
   uri: "https://4646-61-75-87-148.ngrok-free.app/graphql",
 });

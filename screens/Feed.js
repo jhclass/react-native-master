@@ -1,8 +1,8 @@
 import { View, Text, TouchableOpacity } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { tokenVar, isLoggedInVar, logoutFunc } from "../apollo";
+import { logoutFunc } from "../apollo";
 import { gql } from "@apollo/client";
 import { PHOTO_FRAGMENT, COMMENT_FRAGMENT } from "../fragments";
+
 const FEED_QUERY = gql`
   query seeFeed {
     seeFeed {
