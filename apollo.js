@@ -25,7 +25,6 @@ export const logUserIn = async (token) => {
 };
 
 export const logoutFunc = async () => {
-  //console.log("aaaa");
   const keys = ["token", "loggedIn"];
   await AsyncStorage.multiRemove(keys);
   tokenVar("");

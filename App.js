@@ -39,7 +39,7 @@ export default function App() {
   };
   const preload = async () => {
     const token = await AsyncStorage.getItem("token");
-    console.log(token, "스토리지");
+    console.log(token, "preload에서 앱실행 전 토큰을 받고 있음.");
     if (token) {
       isLoggedInVar(true);
       tokenVar(token);

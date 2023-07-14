@@ -1,7 +1,10 @@
+import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { logoutFunc } from "../apollo";
 import { gql } from "@apollo/client";
 import { PHOTO_FRAGMENT, COMMENT_FRAGMENT } from "../fragments";
+import { useQuery } from "@apollo/client";
 
 const FEED_QUERY = gql`
   query seeFeed {
@@ -27,6 +30,8 @@ const FEED_QUERY = gql`
 `;
 
 const Feed = ({ navigation }) => {
+  const { data } = useQuery(FEED_QUERY);
+  console.log(data);
   return (
     <View
       style={{
