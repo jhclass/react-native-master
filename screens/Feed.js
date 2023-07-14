@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { logoutFunc } from "../apollo";
@@ -32,6 +32,20 @@ const FEED_QUERY = gql`
 const Feed = ({ navigation }) => {
   const { data } = useQuery(FEED_QUERY);
   console.log(data);
+  useEffect(() => {
+    const _retrieveData = async () => {
+      try {
+        const value = await AsyncStorage.getItem("token");
+        if (value !== null) {
+          console.log(value, "토큰토큰토큰");
+        }
+      } catch (error) {
+        console.error("Error retrieving data:", error);
+      }
+    };
+
+    _retrieveData();
+  }, []);
   return (
     <View
       style={{
