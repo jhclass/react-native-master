@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { logoutFunc } from "../apollo";
 import { gql } from "@apollo/client";
@@ -31,21 +31,22 @@ const FEED_QUERY = gql`
 
 const Feed = ({ navigation }) => {
   const { data } = useQuery(FEED_QUERY);
+  // feed 데이터 확인
   console.log(data);
-  useEffect(() => {
-    const _retrieveData = async () => {
-      try {
-        const value = await AsyncStorage.getItem("token");
-        if (value !== null) {
-          console.log(value, "토큰토큰토큰");
-        }
-      } catch (error) {
-        console.error("Error retrieving data:", error);
-      }
-    };
+  // useEffect(() => {
+  //   const _retrieveData = async () => {
+  //     try {
+  //       const value = await AsyncStorage.getItem("token");
+  //       if (value !== null) {
+  //         console.log(value, "토큰토큰토큰");
+  //       }
+  //     } catch (error) {
+  //       console.error("Error retrieving data:", error);
+  //     }
+  //   };
 
-    _retrieveData();
-  }, []);
+  //   _retrieveData();
+  // }, []);
   return (
     <View
       style={{
@@ -55,15 +56,11 @@ const Feed = ({ navigation }) => {
         alignItems: "center",
       }}
     >
-      <TouchableOpacity onPress={() => logoutFunc()}>
-        <Text style={{ color: "#fff" }}>로그아웃</Text>
-      </TouchableOpacity>
-      <View>
-        <Text style={{ color: "#fff" }}>FEED</Text>
-      </View>
-      <TouchableOpacity onPress={() => navigation.navigate("Photo")}>
-        <Text style={{ color: "#fff" }}>Photo</Text>
-      </TouchableOpacity>
+      <ScrollView>
+        <View style={{ height: 20000, flex: 1, backgroundColor: "blue" }}>
+          <Text style={{ color: "#fff" }}>Super text</Text>
+        </View>
+      </ScrollView>
     </View>
   );
 };
