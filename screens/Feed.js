@@ -69,6 +69,8 @@ const Feed = ({ navigation }) => {
         data={data?.seeFeed}
         keyExtractor={(item) => item.id}
         renderItem={renderPhoto}
+        //scrollbar show & hide
+        showsVerticalScrollIndicator={false}
       />
     </ViewContainer>
   );
