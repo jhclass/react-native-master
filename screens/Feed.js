@@ -13,6 +13,7 @@ import { PHOTO_FRAGMENT, COMMENT_FRAGMENT } from "../fragments";
 import { useQuery } from "@apollo/client";
 import { ViewContainer } from "../components/ViewContainer";
 import { FlatList } from "react-native";
+import { Photo } from "../components/Photo";
 
 const FEED_QUERY = gql`
   query seeFeed {
@@ -58,14 +59,13 @@ const Feed = ({ navigation }) => {
   const renderPhoto = ({ item }) => {
     return (
       // === map
-      <View style={{ flex: 1 }}>
-        <Text style={{ color: "white" }}>{item.caption}</Text>
-      </View>
+      <Photo {...item} />
     );
   };
   return (
     <ViewContainer>
       <FlatList
+        style={{ width: "100%" }}
         data={data?.seeFeed}
         keyExtractor={(item) => item.id}
         renderItem={renderPhoto}
