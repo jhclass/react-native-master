@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -39,7 +39,8 @@ const FEED_QUERY = gql`
 `;
 
 const Feed = ({ navigation }) => {
-  const { data, loading } = useQuery(FEED_QUERY);
+  const { data, loading, refetch } = useQuery(FEED_QUERY);
+  const [refreshing, setRefreshing] = useState(false);
   // feed 데이터 확인
   console.log(data);
   // useEffect(() => {
@@ -62,9 +63,18 @@ const Feed = ({ navigation }) => {
       <Photo {...item} />
     );
   };
+
+  const refresh = async () => {
+    console.log(111111111111111);
+    setRefreshing(true);
+    await refetch();
+    setRefreshing(false);
+  };
   return (
     <ViewContainer>
       <FlatList
+        refreshing={refreshing}
+        onRefresh={refresh}
         style={{ width: "100%" }}
         data={data?.seeFeed}
         keyExtractor={(item) => item.id}
