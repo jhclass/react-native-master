@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { PropTypes } from "prop-types";
 import styled from "styled-components/native";
-import { useWindowDimensions } from "react-native";
+import { useWindowDimensions, Image } from "react-native";
+
 const Container = styled.View`
   background-color: red;
 `;
@@ -21,7 +22,15 @@ const LikeNumber = styled.Text`
   color: #fff;
 `;
 export const Photo = ({ id, user, caption, file, isLiked, likes }) => {
-  const { width } = useWindowDimensions();
+  const { width: Swidth } = useWindowDimensions();
+  const [imageHeight, setImageHeight] = useState(300);
+  useEffect(() => {
+    Image.getSize(file, (width, height) => {
+      console.log(width);
+      console.log(height);
+      setImageHeight((height * Swidth) / width);
+    });
+  }, [file]);
   //console.log(dimensions);
   return (
     <Container>
@@ -30,7 +39,8 @@ export const Photo = ({ id, user, caption, file, isLiked, likes }) => {
         <Username>{user.username}</Username>
       </Header>
       <File
-        style={{ width: width, height: width * 1.2 }}
+        resizeMode="cover"
+        style={{ width: Swidth, height: imageHeight }}
         source={{ uri: file }}
       />
       <Actions>
