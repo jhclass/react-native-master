@@ -3,9 +3,9 @@ import { PropTypes } from "prop-types";
 import styled from "styled-components/native";
 import { useWindowDimensions, Image, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { Ionicons, AntDesign } from "@expo/vector-icons";
 
 const Container = styled.View`
-  background-color: red;
   margin-bottom: 10px;
 `;
 const Header = styled.TouchableOpacity`
@@ -21,10 +21,15 @@ const Username = styled.Text`
   font-weight: 600;
 `;
 const File = styled.Image``;
-const Actions = styled.View``;
-const Action = styled.TouchableOpacity``;
+const Actions = styled.View`
+  flex-direction: row;
+`;
+const Action = styled.TouchableOpacity`
+  margin-right: 10px;
+`;
 const Caption = styled.View`
   flex-direction: row;
+  align-items: center;
 `;
 const CaptionText = styled.Text`
   color: #fff;
@@ -70,12 +75,27 @@ export const Photo = ({ id, user, caption, file, isLiked, likes }) => {
       />
       <ExtraContainer>
         <Actions>
-          <Action />
-          <Action />
+          <Action>
+            <Ionicons
+              name={isLiked ? "heart" : "heart-outline"}
+              color={isLiked ? "#d42643" : "#fff"}
+              size={20}
+            />
+          </Action>
+          <Action>
+            <Ionicons name="chatbubble-outline" color={"#fff"} size={20} />
+          </Action>
         </Actions>
-        <LikeNumber>
-          {likes === 1 ? "1 like" : `${likes}개의 공감을 받았습니다.`}
-        </LikeNumber>
+        <TouchableOpacity>
+          <LikeNumber
+            onPress={() => {
+              navigation.navigate("Likes");
+            }}
+          >
+            {likes === 1 ? "1 like" : `${likes}개의 공감을 받았습니다.`}
+          </LikeNumber>
+        </TouchableOpacity>
+
         <Caption>
           <Username>{user.username}</Username>
           <CaptionText>{caption}</CaptionText>
