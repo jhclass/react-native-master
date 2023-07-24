@@ -32,6 +32,10 @@ const CaptionText = styled.Text`
 `;
 const LikeNumber = styled.Text`
   color: #fff;
+  margin: 7px 0px;
+`;
+const ExtraContainer = styled.View`
+  padding: 10px;
 `;
 export const Photo = ({ id, user, caption, file, isLiked, likes }) => {
   const { width: Swidth } = useWindowDimensions();
@@ -64,17 +68,19 @@ export const Photo = ({ id, user, caption, file, isLiked, likes }) => {
         style={{ width: Swidth, height: imageHeight }}
         source={{ uri: file }}
       />
-      <Actions>
-        <Action />
-        <Action />
-      </Actions>
-      <LikeNumber>
-        {likes === 1 ? "1 like" : `${likes}개의 공감을 받았습니다.`}
-      </LikeNumber>
-      <Caption>
-        <Username>{user.username}</Username>
-        <CaptionText>{caption}</CaptionText>
-      </Caption>
+      <ExtraContainer>
+        <Actions>
+          <Action />
+          <Action />
+        </Actions>
+        <LikeNumber>
+          {likes === 1 ? "1 like" : `${likes}개의 공감을 받았습니다.`}
+        </LikeNumber>
+        <Caption>
+          <Username>{user.username}</Username>
+          <CaptionText>{caption}</CaptionText>
+        </Caption>
+      </ExtraContainer>
     </Container>
   );
 };
