@@ -6,7 +6,7 @@ import {
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import { persistCache, AsyncStorageWrapper } from "apollo3-cache-persist";
 export const isLoggedInVar = makeVar(false);
 export const tokenVar = makeVar("");
 //ngrok
@@ -43,19 +43,22 @@ const authLink = setContext((_, { headers }) => {
     },
   };
 });
-const client = new ApolloClient({
-  link: authLink.concat(httpLink),
-  cache: new InMemoryCache({
-    typePolicies: {
-      Query: {
-        fields: {
-          seedFeed: {
-            keyArgs: false,
-          },
+
+export const cache = new InMemoryCache({
+  typePolicies: {
+    Query: {
+      fields: {
+        seedFeed: {
+          keyArgs: false,
         },
       },
     },
-  }),
+  },
+});
+
+const client = new ApolloClient({
+  link: authLink.concat(httpLink),
+  cache: cache,
 });
 
 export default client;

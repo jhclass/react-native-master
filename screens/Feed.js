@@ -83,7 +83,7 @@ const Feed = ({ navigation }) => {
         offset: newOffset,
       },
       updateQuery: (prev, { fetchMoreResult }) => {
-        console.log(prev, "이이이이이이진진진형형형형형", fetchMoreResult);
+        //console.log(prev, "이이이이이이진진진형형형형형", fetchMoreResult);
         if (!fetchMoreResult) return prev;
         return Object.assign({}, prev, {
           seeFeed: [...prev.seeFeed, ...fetchMoreResult.seeFeed],

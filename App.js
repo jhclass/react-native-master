@@ -14,7 +14,8 @@ import {
 } from "@react-navigation/native";
 import { ThemeProvider } from "styled-components/native";
 import { ApolloProvider, useReactiveVar } from "@apollo/client";
-import client, { isLoggedInVar, tokenVar } from "./apollo";
+import { persistCache, AsyncStorageWrapper } from "apollo3-cache-persist";
+import client, { isLoggedInVar, tokenVar, cache } from "./apollo";
 
 export default function App() {
   const [loading, setLoading] = useState(true);
@@ -27,6 +28,7 @@ export default function App() {
   useEffect(() => {
     console.log("Current theme:", colorScheme);
   }, [colorScheme]);
+
   const preloadAssets = () => {
     const fontsToLoad = [Ionicons.font];
     const fontPromises = fontsToLoad.map((font) => Font.loadAsync(font));
@@ -44,6 +46,10 @@ export default function App() {
       isLoggedInVar(true);
       tokenVar(token);
     }
+    await persistCache({
+      cache,
+      storage: new AsyncStorageWrapper(AsyncStorage),
+    });
     return preloadAssets();
   };
 
