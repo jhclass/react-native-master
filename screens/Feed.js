@@ -16,8 +16,8 @@ import { FlatList } from "react-native";
 import { Photo } from "../components/Photo";
 
 const FEED_QUERY = gql`
-  query seeFeed {
-    seeFeed {
+  query seeFeed($offset: Int!) {
+    seeFeed(offset: $offset) {
       ...PhotoFragment
       caption
       isMine
@@ -39,10 +39,15 @@ const FEED_QUERY = gql`
 `;
 
 const Feed = ({ navigation }) => {
-  const { data, loading, refetch } = useQuery(FEED_QUERY);
+  //const [offset, setOffset] = useState(0);
+  const { data, loading, refetch, fetchMore } = useQuery(FEED_QUERY, {
+    variables: {
+      offset: 0,
+    },
+  });
   const [refreshing, setRefreshing] = useState(false);
   // feed 데이터 확인
-  console.log(data);
+  //console.log(data);
   // useEffect(() => {
   //   const _retrieveData = async () => {
   //     try {
@@ -65,14 +70,32 @@ const Feed = ({ navigation }) => {
   };
 
   const refresh = async () => {
-    console.log(111111111111111);
+    //console.log(111111111111111);
     setRefreshing(true);
     await refetch();
     setRefreshing(false);
   };
+  const handleEndReached = () => {
+    // 기존의 offset에 데이터의 길이를 더하여 다음 페이지를 가져오도록 설정
+    const newOffset = data?.seeFeed?.length || 0;
+    fetchMore({
+      variables: {
+        offset: newOffset,
+      },
+      updateQuery: (prev, { fetchMoreResult }) => {
+        console.log(prev, "이이이이이이진진진형형형형형", fetchMoreResult);
+        if (!fetchMoreResult) return prev;
+        return Object.assign({}, prev, {
+          seeFeed: [...prev.seeFeed, ...fetchMoreResult.seeFeed],
+        });
+      },
+    });
+  };
   return (
     <ViewContainer>
       <FlatList
+        onEndReachedThreshold={1}
+        onEndReached={handleEndReached}
         refreshing={refreshing}
         onRefresh={refresh}
         style={{ width: "100%" }}
