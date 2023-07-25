@@ -5,15 +5,8 @@ import { useWindowDimensions, Image, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
 import { gql, useMutation } from "@apollo/client";
-
-const TOGGLE_LIKE_MUTATION = gql`
-  mutation ($toggleLikeId: Int!) {
-    toggleLike(id: $toggleLikeId) {
-      ok
-      error
-    }
-  }
-`;
+import { Text } from "react-native";
+import LikeAction from "./LikeAction";
 
 const Container = styled.View`
   margin-bottom: 10px;
@@ -64,66 +57,11 @@ export const Photo = ({ id, user, caption, file, isLiked, likes }) => {
     });
   }, [file]);
   //console.log(dimensions);
-  const updateToggleLike = (cache, result) => {
-    console.log(cache, result);
-    const {
-      data: {
-        toggleLike: { ok },
-      },
-    } = result;
-    //console.log(ok);
-    if (ok) {
-      //console.log("toggleLike 가 제대로 동작함.");
-      //console.log(likes, isLiked);
-      const fragmentId = `Photo:${id}`;
-      cache.modify({
-        id: fragmentId,
-        fields: {
-          isLiked(prev) {
-            return !prev;
-          },
-          likes(prev) {
-            if (isLiked) {
-              return prev - 1;
-            }
-            return prev + 1;
-          },
-        },
-      });
-      // const fragment = gql`
-      //   fragment BSName on Photo {
-      //     isLiked
-      //     likes
-      //   }
-      // `;
-      // Photo 컴포넌트안에 arg 가 없어도 readFragment 를 통해서 불러올수 있어
-      // const result = cache.readFragment({
-      //   id: fragmentId,
-      //   fragment: fragment,
-      // });
-      // console.log(result);
-      // cache.writeFragment({
-      //   id: fragmentId,
-      //   fragment: fragment,
-      //   data: {
-      //     isLiked: !isLiked,
-      //     likes: isLiked ? likes - 1 : likes + 1,
-      //   },
-      // });
-    }
-    //console.log(likes, isLiked);
-  };
-  const [toggleLikes] = useMutation(TOGGLE_LIKE_MUTATION, {
-    variables: {
-      id: id,
-    },
-    //onCompleted: datachk,
-    //refetchQueries: [{ query: FEED_QUERY }],
-    update: updateToggleLike,
-  });
+
   //console.log(toggleLikeMutation);
   return (
     <Container>
+      <Text style={{ color: "#fff" }}>{id}</Text>
       <Header
         onPress={() => {
           navigation.navigate("Profile");
@@ -143,13 +81,7 @@ export const Photo = ({ id, user, caption, file, isLiked, likes }) => {
       />
       <ExtraContainer>
         <Actions>
-          <Action>
-            <Ionicons
-              name={isLiked ? "heart" : "heart-outline"}
-              color={isLiked ? "#d42643" : "#fff"}
-              size={20}
-            />
-          </Action>
+          <LikeAction isLiked={isLiked} id={id} />
           <Action>
             <Ionicons name="chatbubble-outline" color={"#fff"} size={20} />
           </Action>
