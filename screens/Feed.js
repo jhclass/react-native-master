@@ -65,7 +65,7 @@ const Feed = ({ navigation }) => {
   const renderPhoto = ({ item }) => {
     return (
       // === map
-      <Photo {...item} />
+      <Photo {...item} key={item.id} />
     );
   };
 
@@ -88,6 +88,10 @@ const Feed = ({ navigation }) => {
         return Object.assign({}, prev, {
           seeFeed: [...prev.seeFeed, ...fetchMoreResult.seeFeed],
         });
+        // return {
+        //   prev,
+        //   seeFeed: [...prev.seeFeed, ...fetchMoreResult.seeFeed],
+        // };
       },
     });
   };
@@ -100,7 +104,7 @@ const Feed = ({ navigation }) => {
         onRefresh={refresh}
         style={{ width: "100%" }}
         data={data?.seeFeed}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item, index) => String(index)}
         renderItem={renderPhoto}
         //scrollbar show & hide
         showsVerticalScrollIndicator={false}

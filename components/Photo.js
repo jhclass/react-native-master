@@ -59,9 +59,13 @@ export const Photo = ({ id, user, caption, file, isLiked, likes }) => {
   //console.log(dimensions);
 
   //console.log(toggleLikeMutation);
+  const defaultProfileImage = require("../assets/default_profile.png");
   return (
     <Container>
-      <Text style={{ color: "#fff" }}>{id}</Text>
+      <Text style={{ color: "#fff" }}>
+        사진번호 : {id}, 공감숫자 :{likes}, 내가 공감을 하였는가:
+        {isLiked ? "true" : "false"}
+      </Text>
       <Header
         onPress={() => {
           navigation.navigate("Profile");
@@ -69,7 +73,7 @@ export const Photo = ({ id, user, caption, file, isLiked, likes }) => {
       >
         <UserAvatar
           resizeMode="cover"
-          source={{ uri: user.avatar }}
+          source={user.avatar ? { uri: user.avatar } : defaultProfileImage}
           style={{ width: 40, height: 40, borderRadius: 25 }}
         />
         <Username>{user.username}</Username>
@@ -89,7 +93,7 @@ export const Photo = ({ id, user, caption, file, isLiked, likes }) => {
         <TouchableOpacity>
           <LikeNumber
             onPress={() => {
-              navigation.navigate("Likes");
+              navigation.navigate("Likes", { photoId: id });
             }}
           >
             {likes === 1 ? "1 like" : `${likes}개의 공감을 받았습니다.`}

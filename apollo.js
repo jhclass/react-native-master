@@ -6,7 +6,7 @@ import {
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { persistCache, AsyncStorageWrapper } from "apollo3-cache-persist";
+
 export const isLoggedInVar = makeVar(false);
 export const tokenVar = makeVar("");
 //ngrok
@@ -32,7 +32,7 @@ export const logoutFunc = async () => {
 };
 
 const httpLink = createHttpLink({
-  uri: "https://4646-61-75-87-148.ngrok-free.app/graphql",
+  uri: "https://d845-61-75-87-148.ngrok-free.app/graphql",
 });
 
 const authLink = setContext((_, { headers }) => {

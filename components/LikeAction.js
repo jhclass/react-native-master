@@ -64,7 +64,7 @@ const LikeAction = ({ id, isLiked }) => {
       //   },
       // });
     }
-    //console.log(likes, isLiked);
+    //console.log(prev, isLiked);
   };
   const [toggleLikes] = useMutation(TOGGLE_LIKE_MUTATION, {
     variables: {

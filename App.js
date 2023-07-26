@@ -46,6 +46,7 @@ export default function App() {
       isLoggedInVar(true);
       tokenVar(token);
     }
+    // 잠시만 안녕 :)
     await persistCache({
       cache,
       storage: new AsyncStorageWrapper(AsyncStorage),
