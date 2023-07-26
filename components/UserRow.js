@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components/native";
-
+import { Text, View, Image } from "react-native";
 const Column = styled.View`
   flex-direction: row;
   align-items: center;
@@ -16,7 +16,7 @@ const Username = styled.Text`
   margin-left: 10px;
   font-weight: 600;
 `;
-const Wrapper = styled.View`
+const Jpop = styled.View`
   flex-direction: space-between;
   align-items: center;
 `;
@@ -34,16 +34,16 @@ export const UserRow = ({ username, avatar, isFollowing, isMe }) => {
   const defaultProfileImage = require("../assets/default_profile.png");
   console.log(avatar, "전달");
   return (
-    <Wrapper>
+    <Column>
       <Column>
         <Avatar source={avatar ? { uri: avatar } : defaultProfileImage} />
-        <Username>{username}</Username>
+        <Username style={{ color: "#fff" }}>{username}</Username>
       </Column>
       {!isMe ? (
         <FollowBtn>
-          <FollowBtnText>{isFollowing ? "UnFollow" : "Follow"}</FollowBtnText>
+          <FollowBtnText>{isFollowing ? "Unfollow" : "Follow"}</FollowBtnText>
         </FollowBtn>
       ) : null}
-    </Wrapper>
+    </Column>
   );
 };

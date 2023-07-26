@@ -62,10 +62,10 @@ export const Photo = ({ id, user, caption, file, isLiked, likes }) => {
   const defaultProfileImage = require("../assets/default_profile.png");
   return (
     <Container>
-      <Text style={{ color: "#fff" }}>
+      {/* <Text style={{ color: "#fff" }}>
         사진번호 : {id}, 공감숫자 :{likes}, 내가 공감을 하였는가:
         {isLiked ? "true" : "false"}
-      </Text>
+      </Text> */}
       <Header
         onPress={() => {
           navigation.navigate("Profile");

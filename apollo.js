@@ -32,7 +32,7 @@ export const logoutFunc = async () => {
 };
 
 const httpLink = createHttpLink({
-  uri: "https://d845-61-75-87-148.ngrok-free.app/graphql",
+  uri: "https://ef85-61-75-87-148.ngrok-free.app/graphql",
 });
 
 const authLink = setContext((_, { headers }) => {
