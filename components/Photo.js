@@ -7,13 +7,45 @@ import { Ionicons, AntDesign } from "@expo/vector-icons";
 import { gql, useMutation } from "@apollo/client";
 import { Text } from "react-native";
 import LikeAction from "./LikeAction";
+import { colors } from "../colors";
+import { PHOTO_FRAGMENT, COMMENT_FRAGMENT } from "../fragments";
+const DELETE_PHOTO_MUTATION = gql`
+  mutation ($deletePhotoId: Int!) {
+    deletePhoto(id: $deletePhotoId) {
+      ok
+      error
+    }
+  }
+`;
+const FEED_QUERY = gql`
+  query seeFeed($offset: Int!) {
+    seeFeed(offset: $offset) {
+      ...PhotoFragment
+      caption
+      isMine
 
+      comments {
+        ...CommentFragment
+      }
+      createdAt
+      user {
+        username
+        avatar
+      }
+
+      file
+    }
+  }
+  ${PHOTO_FRAGMENT}
+  ${COMMENT_FRAGMENT}
+`;
 const Container = styled.View`
   margin-bottom: 10px;
 `;
 const Header = styled.TouchableOpacity`
   padding: 20px 10px;
   flex-direction: row;
+  justify-content: space-between;
   align-items: center;
 `;
 const UserAvatar = styled.Image`
@@ -39,16 +71,57 @@ const CaptionText = styled.Text`
   margin-left: 10px;
 `;
 const LikeNumber = styled.Text`
-  color: #fff;
+  color: ${colors.white};
   margin: 7px 0px;
 `;
 const ExtraContainer = styled.View`
   padding: 10px;
 `;
-export const Photo = ({ id, user, caption, file, isLiked, likes }) => {
+const UserContainer = styled.View`
+  flex-direction: row;
+
+  align-items: center;
+`;
+const DeleteBtn = styled.TouchableOpacity`
+  padding: 1px 4px;
+  background-color: ${colors.red};
+  border-radius: 2px;
+`;
+const DeleteBtnText = styled.Text`
+  color: ${colors.white};
+`;
+export const Photo = ({ id, user, caption, file, isLiked, likes, isMine }) => {
+  console.log(id);
   const { width: Swidth } = useWindowDimensions();
   const [imageHeight, setImageHeight] = useState(300);
   const navigation = useNavigation();
+  const [deletePhoto, { loading }, refetch] = useMutation(
+    DELETE_PHOTO_MUTATION,
+    {
+      variables: {
+        deletePhotoId: id,
+      },
+      onCompleted: (data) => {
+        console.log(data, "데이터가뭘까");
+        const {
+          deletePhoto: { ok, error },
+        } = data;
+        if (ok) {
+          alert("삭제되었습니다.");
+        } else {
+          alert("삭제할 수 없습니다.");
+        }
+      },
+      refetchQueries: [
+        {
+          query: FEED_QUERY,
+          variables: {
+            offset: 0,
+          },
+        },
+      ],
+    }
+  );
   useEffect(() => {
     Image.getSize(file, (width, height) => {
       //   console.log(width);
@@ -62,21 +135,28 @@ export const Photo = ({ id, user, caption, file, isLiked, likes }) => {
   const defaultProfileImage = require("../assets/default_profile.png");
   return (
     <Container>
-      {/* <Text style={{ color: "#fff" }}>
+      <Text style={{ color: "#fff" }}>
         사진번호 : {id}, 공감숫자 :{likes}, 내가 공감을 하였는가:
         {isLiked ? "true" : "false"}
-      </Text> */}
+      </Text>
       <Header
         onPress={() => {
           navigation.navigate("Profile");
         }}
       >
-        <UserAvatar
-          resizeMode="cover"
-          source={user.avatar ? { uri: user.avatar } : defaultProfileImage}
-          style={{ width: 40, height: 40, borderRadius: 25 }}
-        />
-        <Username>{user.username}</Username>
+        <UserContainer>
+          <UserAvatar
+            resizeMode="cover"
+            source={user.avatar ? { uri: user.avatar } : defaultProfileImage}
+            style={{ width: 40, height: 40, borderRadius: 25 }}
+          />
+          <Username>{user.username}</Username>
+        </UserContainer>
+        {isMine ? (
+          <DeleteBtn onPress={deletePhoto}>
+            <DeleteBtnText>삭제</DeleteBtnText>
+          </DeleteBtn>
+        ) : null}
       </Header>
       <File
         resizeMode="cover"
