@@ -1,10 +1,12 @@
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { logoutFunc } from "../apollo";
-
+import styled from "styled-components/native";
+const Wrapper = styled.View``;
+const MeContainer = styled.View``;
 const Me = () => {
   return (
-    <View
+    <Wrapper
       style={{
         backgroundColor: "#000",
         flex: 1,
@@ -12,13 +14,10 @@ const Me = () => {
         alignItems: "center",
       }}
     >
-      <TouchableOpacity onPress={() => logoutFunc()}>
-        <Text style={{ color: "#fff" }}>로그아웃</Text>
-      </TouchableOpacity>
-      <View>
+      <MeContainer>
         <Text style={{ color: "#fff" }}>Its Me!</Text>
-      </View>
-    </View>
+      </MeContainer>
+    </Wrapper>
   );
 };
 

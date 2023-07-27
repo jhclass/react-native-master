@@ -5,7 +5,7 @@ import { gql, useQuery } from "@apollo/client";
 
 import { FlatList } from "react-native";
 import { ViewContainer } from "../components/ViewContainer";
-import { UserRow } from "../components/UserRow";
+import UserRow from "../components/UserRow";
 import styled from "styled-components/native";
 const LIKES_QUERY = gql`
   query ($seePhotoLikesId: Int!) {
