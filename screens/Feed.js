@@ -38,6 +38,15 @@ const FEED_QUERY = gql`
   ${COMMENT_FRAGMENT}
 `;
 
+const ME_QUERY = gql`
+  query {
+    me {
+      id
+      username
+    }
+  }
+`;
+
 const Feed = ({ navigation }) => {
   //const [offset, setOffset] = useState(0);
   const { data, loading, refetch, fetchMore } = useQuery(FEED_QUERY, {
@@ -45,6 +54,8 @@ const Feed = ({ navigation }) => {
       offset: 0,
     },
   });
+  const { data: meQuery, loading: meLoading } = useQuery(ME_QUERY);
+  console.log(meQuery, "ME_QUERY");
   const [refreshing, setRefreshing] = useState(false);
   // feed 데이터 확인
   //console.log(data);
@@ -62,7 +73,9 @@ const Feed = ({ navigation }) => {
 
   //   _retrieveData();
   // }, []);
+
   const renderPhoto = ({ item }) => {
+    //console.log(item, "이것은 아이템이다");
     return (
       // === map
       <Photo {...item} key={item.id} />
@@ -85,13 +98,13 @@ const Feed = ({ navigation }) => {
       updateQuery: (prev, { fetchMoreResult }) => {
         //console.log(prev, "이이이이이이진진진형형형형형", fetchMoreResult);
         if (!fetchMoreResult) return prev;
-        // return Object.assign({}, prev, {
-        //   seeFeed: [...prev.seeFeed, ...fetchMoreResult.seeFeed],
-        // });
-        return {
-          prev,
+        return Object.assign({}, prev, {
           seeFeed: [...prev.seeFeed, ...fetchMoreResult.seeFeed],
-        };
+        });
+        // return {
+        //   prev,
+        //   seeFeed: [...prev?.seeFeed, ...fetchMoreResult?.seeFeed],
+        // };
       },
     });
   };

@@ -16,21 +16,6 @@ export const tokenVar = makeVar("");
 // });
 // Initialize Apollo Client
 
-export const logUserIn = async (token) => {
-  await AsyncStorage.multiSet([
-    ["token", token],
-    ["loggedIn", "yes"],
-  ]);
-  isLoggedInVar(true);
-};
-
-export const logoutFunc = async () => {
-  const keys = ["token", "loggedIn"];
-  await AsyncStorage.multiRemove(keys);
-  tokenVar("");
-  isLoggedInVar(false);
-};
-
 const httpLink = createHttpLink({
   uri: "https://ef85-61-75-87-148.ngrok-free.app/graphql",
 });
@@ -60,5 +45,22 @@ const client = new ApolloClient({
   link: authLink.concat(httpLink),
   cache: cache,
 });
+export const logUserIn = async (token) => {
+  client.resetStore();
+  await AsyncStorage.multiSet([
+    ["token", token],
+    ["loggedIn", "yes"],
+  ]);
+  tokenVar(token);
+  isLoggedInVar(true);
+};
+
+export const logoutFunc = async () => {
+  const keys = ["token", "loggedIn"];
+  await AsyncStorage.multiRemove(keys);
+  tokenVar(false);
+  isLoggedInVar(null);
+  //client.resetStore();
+};
 
 export default client;

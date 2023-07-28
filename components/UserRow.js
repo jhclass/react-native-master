@@ -41,9 +41,9 @@ const FollowBtnText = styled.Text`
 `;
 
 const UserRow = ({ username, avatar, isFollowing, isMe }) => {
-  console.log(avatar, "전달");
+  //console.log(avatar, "전달");
   const defaultProfileImage = require("../assets/default_profile.png");
-  console.log(avatar, "전달2");
+  //console.log(avatar, "전달2");
   return (
     <MainContainer>
       <Column>

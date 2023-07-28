@@ -42,7 +42,7 @@ const FEED_QUERY = gql`
 const Container = styled.View`
   margin-bottom: 10px;
 `;
-const Header = styled.TouchableOpacity`
+const Header = styled.View`
   padding: 20px 10px;
   flex-direction: row;
   justify-content: space-between;
@@ -58,6 +58,7 @@ const Username = styled.Text`
 const File = styled.Image``;
 const Actions = styled.View`
   flex-direction: row;
+  margin-bottom: 5px;
 `;
 const Action = styled.TouchableOpacity`
   margin-right: 10px;
@@ -72,12 +73,12 @@ const CaptionText = styled.Text`
 `;
 const LikeNumber = styled.Text`
   color: ${colors.white};
-  margin: 7px 0px;
+  margin: 0px 0px 5px 0px;
 `;
 const ExtraContainer = styled.View`
   padding: 10px;
 `;
-const UserContainer = styled.View`
+const UserContainer = styled.TouchableOpacity`
   flex-direction: row;
 
   align-items: center;
@@ -91,37 +92,34 @@ const DeleteBtnText = styled.Text`
   color: ${colors.white};
 `;
 export const Photo = ({ id, user, caption, file, isLiked, likes, isMine }) => {
-  console.log(id);
+  //console.log(id);
+  console.log(isMine);
   const { width: Swidth } = useWindowDimensions();
   const [imageHeight, setImageHeight] = useState(300);
   const navigation = useNavigation();
-  const [deletePhoto, { loading }, refetch] = useMutation(
-    DELETE_PHOTO_MUTATION,
-    {
-      variables: {
-        deletePhotoId: id,
-      },
-      onCompleted: (data) => {
-        console.log(data, "데이터가뭘까");
-        const {
-          deletePhoto: { ok, error },
-        } = data;
-        if (ok) {
-          alert("삭제되었습니다.");
-        } else {
-          alert("삭제할 수 없습니다.");
-        }
-      },
-      refetchQueries: [
-        {
-          query: FEED_QUERY,
-          variables: {
-            offset: 0,
-          },
+  const [deletePhoto, { loading }] = useMutation(DELETE_PHOTO_MUTATION, {
+    variables: {
+      deletePhotoId: id,
+    },
+    onCompleted: (data) => {
+      const {
+        deletePhoto: { ok, error },
+      } = data;
+      if (ok) {
+        alert("삭제 되었습니다.");
+      } else {
+        alert("삭제 할 수 없습니다.");
+      }
+    },
+    refetchQueries: [
+      {
+        query: FEED_QUERY,
+        variables: {
+          offset: 0,
         },
-      ],
-    }
-  );
+      },
+    ],
+  });
   useEffect(() => {
     Image.getSize(file, (width, height) => {
       //   console.log(width);
@@ -135,16 +133,16 @@ export const Photo = ({ id, user, caption, file, isLiked, likes, isMine }) => {
   const defaultProfileImage = require("../assets/default_profile.png");
   return (
     <Container>
-      <Text style={{ color: "#fff" }}>
+      {/* <Text style={{ color: "#fff" }}>
         사진번호 : {id}, 공감숫자 :{likes}, 내가 공감을 하였는가:
         {isLiked ? "true" : "false"}
-      </Text>
-      <Header
-        onPress={() => {
-          navigation.navigate("Profile");
-        }}
-      >
-        <UserContainer>
+      </Text> */}
+      <Header>
+        <UserContainer
+          onPress={() => {
+            navigation.navigate("Profile");
+          }}
+        >
           <UserAvatar
             resizeMode="cover"
             source={user.avatar ? { uri: user.avatar } : defaultProfileImage}
@@ -170,15 +168,17 @@ export const Photo = ({ id, user, caption, file, isLiked, likes, isMine }) => {
             <Ionicons name="chatbubble-outline" color={"#fff"} size={20} />
           </Action>
         </Actions>
-        <TouchableOpacity>
-          <LikeNumber
-            onPress={() => {
-              navigation.navigate("Likes", { photoId: id });
-            }}
-          >
-            {likes === 1 ? "1 like" : `${likes}개의 공감을 받았습니다.`}
-          </LikeNumber>
-        </TouchableOpacity>
+        {likes > 0 ? (
+          <TouchableOpacity>
+            <LikeNumber
+              onPress={() => {
+                navigation.navigate("Likes", { photoId: id });
+              }}
+            >
+              {`${likes}개의 공감을 받았습니다.`}
+            </LikeNumber>
+          </TouchableOpacity>
+        ) : null}
 
         <Caption>
           <Username>{user.username}</Username>

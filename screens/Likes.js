@@ -37,6 +37,16 @@ const Likes = ({ route }) => {
   return (
     <ViewContainer>
       <FlatList
+        ItemSeparatorComponent={() => {
+          <View
+            style={{
+              width: "100%",
+              height: 2,
+              backgrondColor: "rgba(255,255,255,0.2)",
+              color: "red",
+            }}
+          ></View>;
+        }}
         refreshing={refreshing}
         onRefresh={onRefresh}
         data={data?.seePhotoLikes}
