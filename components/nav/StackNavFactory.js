@@ -39,7 +39,7 @@ export default function StackNavFactory({ screenName }) {
             headerTitle: () => (
               <Image
                 source={require("../../assets/logo_color.png")}
-                style={{ maxHeight: 30, maxWidth: 100 }}
+                style={{ maxHeight: 30, maxWidth: 150 }}
               />
             ),
           }}

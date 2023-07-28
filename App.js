@@ -5,7 +5,7 @@ import AppLoading from "expo-app-loading";
 import * as Font from "expo-font";
 import { Asset } from "expo-asset";
 import LoggedOutNav from "./navigator/LoggedOutNav";
-import { LoggedInNav } from "./navigator/loogedInNav";
+import { LoggedInNav } from "./navigator/loggedInNav";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   DarkTheme,
