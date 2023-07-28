@@ -93,7 +93,7 @@ const DeleteBtnText = styled.Text`
 `;
 export const Photo = ({ id, user, caption, file, isLiked, likes, isMine }) => {
   //console.log(id);
-  //console.log(isMine);
+  console.log(isMine);
   const { width: Swidth } = useWindowDimensions();
   const [imageHeight, setImageHeight] = useState(300);
   const navigation = useNavigation();
@@ -131,6 +131,12 @@ export const Photo = ({ id, user, caption, file, isLiked, likes, isMine }) => {
 
   //console.log(toggleLikeMutation);
   const defaultProfileImage = require("../assets/default_profile.png");
+  const goToProfile = () => {
+    navigation.navigate("Profile", {
+      username: user.username,
+      id: user.id,
+    });
+  };
   return (
     <Container>
       {/* <Text style={{ color: "#fff" }}>
@@ -138,11 +144,7 @@ export const Photo = ({ id, user, caption, file, isLiked, likes, isMine }) => {
         {isLiked ? "true" : "false"}
       </Text> */}
       <Header>
-        <UserContainer
-          onPress={() => {
-            navigation.navigate("Profile");
-          }}
-        >
+        <UserContainer onPress={goToProfile}>
           <UserAvatar
             resizeMode="cover"
             source={user.avatar ? { uri: user.avatar } : defaultProfileImage}
@@ -181,7 +183,7 @@ export const Photo = ({ id, user, caption, file, isLiked, likes, isMine }) => {
         ) : null}
 
         <Caption>
-          <Username>{user.username}</Username>
+          <Username onPress={goToProfile}>{user.username}</Username>
           <CaptionText>{caption}</CaptionText>
         </Caption>
       </ExtraContainer>

@@ -27,6 +27,7 @@ const FEED_QUERY = gql`
       }
       createdAt
       user {
+        id
         username
         avatar
       }

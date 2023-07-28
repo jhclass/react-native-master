@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components/native";
 import { Text, View, Image } from "react-native";
 import { colors } from "../colors";
+import { useNavigation } from "@react-navigation/native";
 
 const MainContainer = styled.View`
   flex-direction: row;
@@ -10,7 +11,7 @@ const MainContainer = styled.View`
   padding: 5px 5px;
 `;
 
-const Column = styled.View`
+const Column = styled.TouchableOpacity`
   flex-direction: row;
   align-items: center;
   padding: 5px 5px;
@@ -40,13 +41,21 @@ const FollowBtnText = styled.Text`
   color: #fff;
 `;
 
-const UserRow = ({ username, avatar, isFollowing, isMe }) => {
+const UserRow = ({ id, username, avatar, isFollowing, isMe }) => {
   //console.log(avatar, "전달");
   const defaultProfileImage = require("../assets/default_profile.png");
   //console.log(avatar, "전달2");
+  const navigation = useNavigation();
   return (
     <MainContainer>
-      <Column>
+      <Column
+        onPress={() =>
+          navigation.navigate("Profile", {
+            username: username,
+            id: id,
+          })
+        }
+      >
         <Avatar source={avatar ? { uri: avatar } : defaultProfileImage} />
         <Username style={{ color: "#fff" }}>{username}</Username>
       </Column>

@@ -25,7 +25,7 @@ const Likes = ({ route }) => {
     skip: !route.params.photoId,
   });
   refetch();
-  //console.log(data);
+  console.log(data);
 
   const onRefresh = async () => {
     setRefreshing(true);

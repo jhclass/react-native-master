@@ -1,8 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { logoutFunc } from "../apollo";
 
-const Profile = () => {
+const Profile = ({ navigation, route }) => {
+  console.log(navigation);
+  console.log(route);
+  useEffect(() => {
+    if (route?.params?.username) {
+      navigation.setOptions({
+        title: route?.params?.username,
+      });
+    }
+  }, [navigation, route]);
+
   return (
     <View
       style={{
@@ -12,9 +22,6 @@ const Profile = () => {
         alignItems: "center",
       }}
     >
-      <TouchableOpacity onPress={() => logoutFunc()}>
-        <Text style={{ color: "#fff" }}>로그아웃</Text>
-      </TouchableOpacity>
       <View>
         <Text style={{ color: "#fff" }}>Someones Profiles</Text>
       </View>
