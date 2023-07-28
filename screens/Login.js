@@ -19,11 +19,11 @@ const LOG_IN_MUTATION = gql`
 `;
 
 const Login = ({ route }) => {
-  console.log(route);
+  //console.log(route);
   const [loginError, setLoginError] = useState("");
   const [logInMutation, { loading }] = useMutation(LOG_IN_MUTATION, {
     onCompleted: async (data) => {
-      console.log(data, "데이터");
+      //console.log(data, "데이터");
       const {
         login: { ok, error, token },
       } = data;
@@ -32,7 +32,7 @@ const Login = ({ route }) => {
       // } else {
       //   alert(error);
       // }
-      console.log(ok);
+      console.log(ok, "Login successful");
       if (ok) {
         await logUserIn(token);
       } else {
@@ -55,7 +55,7 @@ const Login = ({ route }) => {
   });
 
   const onVaild = (data) => {
-    console.log(data);
+    //console.log(data);
     if (!loading) {
       logInMutation({
         variables: {

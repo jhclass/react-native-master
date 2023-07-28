@@ -25,7 +25,7 @@ const Likes = ({ route }) => {
     skip: !route.params.photoId,
   });
   refetch();
-  console.log(data);
+  //console.log(data);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -38,14 +38,15 @@ const Likes = ({ route }) => {
     <ViewContainer>
       <FlatList
         ItemSeparatorComponent={() => {
-          <View
-            style={{
-              width: "100%",
-              height: 2,
-              backgrondColor: "rgba(255,255,255,0.2)",
-              color: "red",
-            }}
-          ></View>;
+          return (
+            <View
+              style={{
+                width: "100%",
+                height: 1,
+                backgroundColor: "rgba(255,255,255,0.2)",
+              }}
+            />
+          );
         }}
         refreshing={refreshing}
         onRefresh={onRefresh}

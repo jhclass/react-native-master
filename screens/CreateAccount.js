@@ -122,7 +122,7 @@ const CreateAccount = ({ navigation }) => {
     CHECK_EMAIL_MUTATION,
     {
       onCompleted: (data) => {
-        console.log(data);
+        // console.log(data);
         const {
           authEmail: { code, ok, message },
         } = data;
@@ -173,7 +173,7 @@ const CreateAccount = ({ navigation }) => {
       alert("아이디를 입력하여주세요.");
       return;
     }
-    console.log(value);
+    //console.log(value);
     checkUserMutation({
       variables: {
         temporaryUser: value,
@@ -184,7 +184,7 @@ const CreateAccount = ({ navigation }) => {
     CREATE_ACOUNT_MUTATION,
     {
       onCompleted: (data) => {
-        console.log(data);
+        //console.log(data);
         const {
           createAccount: { ok, error },
         } = data;
@@ -222,7 +222,7 @@ const CreateAccount = ({ navigation }) => {
       alert("아이디 중복체크를 해주세요.");
       return;
     }
-    console.log(data);
+    //console.log(data);
     createAccountMutation({
       variables: {
         firstName: data.firstName,
@@ -233,7 +233,7 @@ const CreateAccount = ({ navigation }) => {
     });
   };
   const compareEmailOk = (value) => {
-    console.log(codeNum, value);
+    //console.log(codeNum, value);
     if (String(codeNum) === value) {
       // 동일함.
       alert("인증이 완료되었습니다.");

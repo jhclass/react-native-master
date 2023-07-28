@@ -93,7 +93,7 @@ const DeleteBtnText = styled.Text`
 `;
 export const Photo = ({ id, user, caption, file, isLiked, likes, isMine }) => {
   //console.log(id);
-  console.log(isMine);
+  //console.log(isMine);
   const { width: Swidth } = useWindowDimensions();
   const [imageHeight, setImageHeight] = useState(300);
   const navigation = useNavigation();
