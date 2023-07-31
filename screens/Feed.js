@@ -79,7 +79,7 @@ const Feed = ({ navigation }) => {
     //console.log(item, "이것은 아이템이다");
     return (
       // === map
-      <Photo {...item} key={item.id} />
+      <Photo {...item} />
     );
   };
 

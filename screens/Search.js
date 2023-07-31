@@ -99,9 +99,12 @@ const Search = ({ navigation }) => {
   }, [navigation]);
   //console.log(watch());
   const renderSearchPhotos = ({ item: photos }) => {
-    //console.log(photos.file, "파일uri");
+    //console.log(photos.id, "파일uri");
     return (
-      <TouchableOpacity style={{ padding: 2 }}>
+      <TouchableOpacity
+        style={{ padding: 2 }}
+        onPress={() => navigation.navigate("Photo", { photoId: photos.id })}
+      >
         <Image
           source={{ uri: photos.file }}
           style={{
