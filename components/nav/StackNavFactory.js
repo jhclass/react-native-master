@@ -7,9 +7,10 @@ import Feed from "../../screens/Feed";
 import Profile from "../../screens/Profile";
 import Search from "../../screens/Search";
 import Me from "../../screens/Me";
-import { Image } from "react-native";
+import { Image, View, Text, TouchableOpacity } from "react-native";
 import Likes from "../../screens/Likes";
 import Comments from "../../screens/Comments";
+import { colors } from "../../colors";
 const Stack = createStackNavigator();
 export default function StackNavFactory({ screenName }) {
   return (
@@ -17,7 +18,7 @@ export default function StackNavFactory({ screenName }) {
       headerMode="screen"
       screenOptions={{
         headerBackTitleVisuble: false,
-        headerTitleAlign: "center",
+        headerTitleAlign: "left",
         headerTintColor: "white",
         headerBackImage: () => (
           <Ionicons name="chevron-back-outline" size={20} color="white" />
@@ -37,10 +38,28 @@ export default function StackNavFactory({ screenName }) {
           component={Feed}
           options={{
             headerTitle: () => (
-              <Image
-                source={require("../../assets/logo_color.png")}
-                style={{ maxHeight: 30, maxWidth: 150 }}
-              />
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <Image
+                  source={require("../../assets/logo_color.png")}
+                  style={{
+                    maxHeight: 30,
+                    maxWidth: 150,
+                  }}
+                />
+                <TouchableOpacity>
+                  <Ionicons
+                    name="paper-plane-outline"
+                    size={20}
+                    color="#d42643"
+                  />
+                </TouchableOpacity>
+              </View>
             ),
           }}
         />

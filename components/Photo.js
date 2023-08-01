@@ -85,7 +85,7 @@ const UserContainer = styled.TouchableOpacity`
 `;
 const DeleteBtn = styled.TouchableOpacity`
   padding: 1px 4px;
-  background-color: ${colors.red};
+  /* background-color: ${colors.red}; */
   border-radius: 2px;
 `;
 const DeleteBtnText = styled.Text`
@@ -154,7 +154,8 @@ export const Photo = ({ id, user, caption, file, isLiked, likes, isMine }) => {
         </UserContainer>
         {isMine ? (
           <DeleteBtn onPress={deletePhoto}>
-            <DeleteBtnText>삭제</DeleteBtnText>
+            {/* <DeleteBtnText>삭제</DeleteBtnText> */}
+            <Ionicons name="trash-outline" size={20} color="#fff" />
           </DeleteBtn>
         ) : null}
       </Header>
