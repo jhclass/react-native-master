@@ -12,9 +12,7 @@ const Notification = () => {
         alignItems: "center",
       }}
     >
-      <TouchableOpacity onPress={() => logoutFunc()}>
-        <Text style={{ color: "#fff" }}>로그아웃</Text>
-      </TouchableOpacity>
+     
       <View>
         <Text style={{ color: "#fff" }}>Notification</Text>
       </View>
