@@ -108,8 +108,8 @@ const Search = ({ navigation }) => {
         <Image
           source={{ uri: photos.file }}
           style={{
-            width: width / numColumns - 4,
-            height: width / numColumns - 4,
+            width: width / numColumns - 4 + "px",
+            height: width / numColumns - 4 + "px",
 
             resizeMode: "cover",
           }}
