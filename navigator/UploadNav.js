@@ -4,33 +4,10 @@ import { SelectPhoto } from "../screens/SelectPhoto";
 import { TakePhoto } from "../screens/TakePhoto";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
-import * as MediaLibrary from "expo-media-library";
+
 const Tab = createMaterialTopTabNavigator();
 const Stack = createStackNavigator();
 export const UploadNav = () => {
-  const [ok, setOk] = useState(false);
-  const [photos, setPhotos] = useState([]);
-
-  const getPhotos = async () => {
-    if (ok) {
-      const { assets: photos } = await MediaLibrary.getAssetsAsync();
-      console.log(photos);
-      setPhotos(photos);
-    }
-  };
-  const getPermissions = async () => {
-    const { status } = await MediaLibrary.requestPermissionsAsync();
-    if (status !== "granted") {
-      setOk(false);
-    } else if (status === "granted") {
-      setOk(true);
-    }
-  };
-  useEffect(() => {
-    getPermissions();
-    getPhotos();
-  }, [ok]);
-  console.log(ok, "ok?");
   return (
     <Tab.Navigator
       tabBarPosition="bottom"
