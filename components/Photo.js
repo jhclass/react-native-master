@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { PropTypes } from "prop-types";
 import styled from "styled-components/native";
-import { useWindowDimensions, Image, TouchableOpacity } from "react-native";
+import {
+  useWindowDimensions,
+  Image,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
 import { gql, useMutation } from "@apollo/client";
@@ -9,6 +14,7 @@ import { Text } from "react-native";
 import LikeAction from "./LikeAction";
 import { colors } from "../colors";
 import { PHOTO_FRAGMENT, COMMENT_FRAGMENT } from "../fragments";
+
 const DELETE_PHOTO_MUTATION = gql`
   mutation ($deletePhotoId: Int!) {
     deletePhoto(id: $deletePhotoId) {
@@ -137,6 +143,21 @@ export const Photo = ({ id, user, caption, file, isLiked, likes, isMine }) => {
       id: user.id,
     });
   };
+  const onDelete = () => {
+    Alert.alert(
+      "정말 삭제하시겠습니까?",
+      "삭제 되면 복원은 어렵습니다. 다시 한번 생각해보세요!",
+      [
+        {
+          text: "그냥 삭제할게요.",
+          onPress: () => deletePhoto(),
+        },
+        {
+          text: "다시 한번 생각해볼게요",
+        },
+      ]
+    );
+  };
   return (
     <Container>
       {/* <Text style={{ color: "#fff" }}>
@@ -153,7 +174,7 @@ export const Photo = ({ id, user, caption, file, isLiked, likes, isMine }) => {
           <Username>{user.username}</Username>
         </UserContainer>
         {isMine ? (
-          <DeleteBtn onPress={deletePhoto}>
+          <DeleteBtn onPress={onDelete}>
             {/* <DeleteBtnText>삭제</DeleteBtnText> */}
             <Ionicons name="trash-outline" size={20} color="#fff" />
           </DeleteBtn>

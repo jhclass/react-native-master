@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity } from "react-native";
 import { logoutFunc } from "../apollo";
 import styled from "styled-components/native";
 import { useQuery, gql } from "@apollo/client";
+import { colors } from "../colors";
 
 const ME_QUERY = gql`
   query {
@@ -37,6 +38,9 @@ const Me = ({ navigation }) => {
         <Text style={{ color: "#fff" }}>
           안녕 나는 {meQuery?.me?.username} 이야..!(임시)
         </Text>
+        <TouchableOpacity onPress={logoutFunc} style={{ marginTop: 20 }}>
+          <Text style={{ color: colors.blue }}>로그아웃</Text>
+        </TouchableOpacity>
       </MeContainer>
     </Wrapper>
   );
