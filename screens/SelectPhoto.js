@@ -8,6 +8,7 @@ import {
   Image,
   TouchableOpacity,
   useWindowDimensions,
+  StatusBar,
 } from "react-native";
 import styled from "styled-components/native";
 
@@ -37,11 +38,11 @@ export const SelectPhoto = ({ navigation }) => {
   const [ok, setOk] = useState(false);
   const [photos, setPhotos] = useState([]);
   const [chosenPhoto, setChosenPhoto] = useState("");
-
+  console.log(chosenPhoto, "파일네임뭐냐");
   const getPhotos = async () => {
     if (ok) {
       const { assets: photos } = await MediaLibrary.getAssetsAsync();
-      console.log(photos);
+      //console.log(photos);
       setPhotos(photos);
       setChosenPhoto(photos[0]?.uri);
     }
@@ -54,22 +55,28 @@ export const SelectPhoto = ({ navigation }) => {
       setOk(true);
     }
   };
+
   useEffect(() => {
     getPermissions();
     getPhotos();
   }, [ok]);
-  const HeaderRight = () => {
-    return (
-      <NextBtn>
-        <NextBtnText>다음</NextBtnText>
-      </NextBtn>
-    );
-  };
   useEffect(() => {
     navigation.setOptions({
       headerRight: HeaderRight,
     });
-  }, []);
+  }, [chosenPhoto]);
+  const HeaderRight = () => {
+    return (
+      <NextBtn
+        onPress={() =>
+          navigation.navigate("UploadPhoto", { file: chosenPhoto })
+        }
+      >
+        <NextBtnText>다음</NextBtnText>
+      </NextBtn>
+    );
+  };
+
   console.log(ok, "ok?");
   const { width } = useWindowDimensions();
   console.log(width);
@@ -81,6 +88,7 @@ export const SelectPhoto = ({ navigation }) => {
     top: 5px;
     right: 5px;
   `;
+
   const choosePhoto = (uri) => {
     if (uri === chosenPhoto) {
       setChosenPhoto("");
@@ -88,6 +96,7 @@ export const SelectPhoto = ({ navigation }) => {
       setChosenPhoto(uri);
     }
   };
+
   const renderItem = ({ item: gallery }) => {
     return (
       <ImageContainer
@@ -108,8 +117,10 @@ export const SelectPhoto = ({ navigation }) => {
       </ImageContainer>
     );
   };
+
   return (
     <Container>
+      <StatusBar hidden={false} />
       <Top style={{ padding: 2 }}>
         {chosenPhoto !== "" ? (
           <Image

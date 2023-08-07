@@ -15,6 +15,7 @@ import { Camera, CameraType, FlashMode, takePictureAsync } from "expo-camera";
 import Slider from "@react-native-community/slider";
 import { colors } from "../colors";
 import * as MediaLibrary from "expo-media-library";
+import { useIsFocused } from "@react-navigation/native";
 
 const Container = styled.View`
   flex: 1;
@@ -57,7 +58,10 @@ const CloseBtn = styled.TouchableOpacity`
 `;
 export const TakePhoto = ({ navigation }) => {
   const { width } = useWindowDimensions();
+  const isFocused = useIsFocused();
+
   const camera = useRef();
+
   const [takenPhoto, setTakenPhoto] = useState("");
   const [cameraReady, setCameraReady] = useState(false);
   //console.log(navigation.canGoBack);
@@ -72,6 +76,7 @@ export const TakePhoto = ({ navigation }) => {
     console.log(granted, "허가여부");
     setOk(granted);
   };
+
   useEffect(() => {
     getPermissions();
   }, [ok]);
@@ -81,6 +86,8 @@ export const TakePhoto = ({ navigation }) => {
       current === CameraType.back ? CameraType.front : CameraType.back
     );
   };
+  //
+
   //카메라 zoom
   const onZoomValueChange = (e) => {
     //console.log(e);
@@ -106,9 +113,7 @@ export const TakePhoto = ({ navigation }) => {
         exif: true, // meta data
         quality: 1,
       });
-      //console.log(photos); //ecif datas
-      //const assets = await MediaLibrary.createAssetAsync(uri);
-      //console.log(assets);
+
       setTakenPhoto(uri);
     }
   };
@@ -119,6 +124,9 @@ export const TakePhoto = ({ navigation }) => {
     }
     // go to upload
     console.log("Will Upload", takenPhoto);
+    navigation.navigate("UploadPhoto", {
+      file: takenPhoto,
+    });
   };
 
   //Alert 한 김에 photo.js 의 피드 삭제 버튼에도 적용
@@ -138,10 +146,11 @@ export const TakePhoto = ({ navigation }) => {
       ]
     );
   };
+  console.log(isFocused);
   return (
     <Container>
-      <StatusBar hidden={true} />
-      {takenPhoto === "" ? (
+      {isFocused ? <StatusBar hidden={true} /> : null}
+      {isFocused && takenPhoto === "" ? (
         <Camera
           type={cameraType}
           style={{ flex: 1 }}
@@ -149,12 +158,12 @@ export const TakePhoto = ({ navigation }) => {
           ref={camera}
           onCameraReady={onCameraReady}
         />
-      ) : (
+      ) : takenPhoto !== "" ? (
         <Image
           source={{ uri: takenPhoto }}
           style={{ width: width, height: width * 1.333 }}
         />
-      )}
+      ) : null}
       <FlashBtn onPress={onChangeFlashMode}>
         <Ionicons
           name={flashmode === "off" ? "flash" : "flash-off"}

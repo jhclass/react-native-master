@@ -4,7 +4,7 @@ import { SelectPhoto } from "../screens/SelectPhoto";
 import { TakePhoto } from "../screens/TakePhoto";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
-
+import UploadPhoto from "../screens/UploadPhoto";
 const Tab = createMaterialTopTabNavigator();
 const Stack = createStackNavigator();
 export const UploadNav = () => {
