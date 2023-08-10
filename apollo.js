@@ -17,7 +17,7 @@ export const tokenVar = makeVar("");
 // Initialize Apollo Client
 
 const httpLink = createHttpLink({
-  uri: "https://ef85-61-75-87-148.ngrok-free.app/graphql",
+  uri: "https://a78c-61-75-87-148.ngrok-free.app/graphql",
 });
 
 const authLink = setContext((_, { headers }) => {

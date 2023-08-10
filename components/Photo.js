@@ -128,8 +128,8 @@ export const Photo = ({ id, user, caption, file, isLiked, likes, isMine }) => {
   });
   useEffect(() => {
     Image.getSize(file, (width, height) => {
-      //   console.log(width);
-      //   console.log(height);
+      //console.log(width);
+      //console.log(height);
       setImageHeight((height * Swidth) / width);
     });
   }, [file]);
@@ -182,6 +182,7 @@ export const Photo = ({ id, user, caption, file, isLiked, likes, isMine }) => {
       </Header>
       <File
         resizeMode="cover"
+        //style={{ width: Swidth, height: imageHeight }}
         style={{ width: Swidth, height: imageHeight }}
         source={{ uri: file }}
       />
@@ -224,5 +225,5 @@ Photo.propTypes = {
   isLiked: PropTypes.bool.isRequired,
   likes: PropTypes.number.isRequired,
   caption: PropTypes.string.isRequired,
-  commentNumber: PropTypes.number.isRequired,
+  commentNumber: PropTypes.number,
 };

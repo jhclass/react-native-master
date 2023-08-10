@@ -1,5 +1,5 @@
 import { createStackNavigator } from "@react-navigation/stack";
-import Ionicons from "react-native-vector-icons/Ionicons";
+import { Ionicons, AntDesign } from "@expo/vector-icons";
 import React from "react";
 import Photo from "../../screens/Photo";
 import Notification from "../../screens/Notification";
@@ -7,21 +7,28 @@ import Feed from "../../screens/Feed";
 import Profile from "../../screens/Profile";
 import Search from "../../screens/Search";
 import Me from "../../screens/Me";
-import { Image, View, Text, TouchableOpacity } from "react-native";
+import {
+  Image,
+  View,
+  Text,
+  TouchableOpacity,
+  useWindowDimensions,
+} from "react-native";
 import Likes from "../../screens/Likes";
 import Comments from "../../screens/Comments";
 import { colors } from "../../colors";
 const Stack = createStackNavigator();
 export default function StackNavFactory({ screenName }) {
+  const { width } = useWindowDimensions();
   return (
     <Stack.Navigator
       headerMode="screen"
       screenOptions={{
-        headerBackTitleVisuble: false,
-        headerTitleAlign: "left",
+        headerBackTitleVisible: false,
+        headerTitleAlign: "center",
         headerTintColor: "white",
-        headerBackImage: () => (
-          <Ionicons name="chevron-back-outline" size={20} color="white" />
+        headerBackImage: ({ tintColor }) => (
+          <Ionicons name="chevron-back-outline" size={20} color={tintColor} />
         ),
         headerStyle: {
           borderBottomWidth: 1, // 하단 테두리 두께 (android) 안드로이드 적용 O
@@ -43,6 +50,10 @@ export default function StackNavFactory({ screenName }) {
                   flexDirection: "row",
                   justifyContent: "space-between",
                   alignItems: "center",
+                  width: width,
+                  backgroundColor: "#000",
+                  paddingLeft: 10,
+                  paddingRight: 10,
                 }}
               >
                 <Image
@@ -51,6 +62,7 @@ export default function StackNavFactory({ screenName }) {
                     maxHeight: 30,
                     maxWidth: 150,
                   }}
+                  resizeMode="contain"
                 />
                 <TouchableOpacity>
                   <Ionicons

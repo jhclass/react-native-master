@@ -125,7 +125,8 @@ export const SelectPhoto = ({ navigation }) => {
         {chosenPhoto !== "" ? (
           <Image
             source={{ uri: chosenPhoto }}
-            style={{ width: width, height: width }}
+            resizeMode="contain"
+            style={{ height: 100 + "%" }}
           />
         ) : null}
       </Top>

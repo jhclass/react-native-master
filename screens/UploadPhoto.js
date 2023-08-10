@@ -10,7 +10,7 @@ const Container = styled.View`
   background-color: black;
 `;
 const Photo = styled.Image`
-  height: 400px;
+  height: 100%;
 `;
 const CaptionContainer = styled.View`
   padding: 0 30px;
@@ -29,6 +29,14 @@ const NextBtn = styled.TouchableOpacity`
 const NextBtnText = styled.Text`
   color: ${colors.blue};
   font-size: 16px;
+`;
+
+const PhotoContainer = styled.View`
+  height: 400px;
+  margin-top: 20px;
+  border-radius: 10px;
+  background-color: #222;
+  overflow: hidden;
 `;
 
 const UploadPhoto = ({ route, navigation }) => {
@@ -62,15 +70,16 @@ const UploadPhoto = ({ route, navigation }) => {
   return (
     <DismissKeyboard>
       <Container>
-        <Photo source={{ uri: route.params.file }} resizeMode="contain" />
-
         <CaptionContainer>
           <Caption
-            placeholder="오늘 하루도 최선을 다했나요? 글을 남겨주세요!🙏"
+            placeholder="오늘 나의 노력에 대한 소감을 작성하여주세요 🙏"
             placeholderTextColor="black"
             onChangeText={(text) => setValue("caption", text)}
           />
         </CaptionContainer>
+        <PhotoContainer>
+          <Photo source={{ uri: route.params.file }} resizeMode="contain" />
+        </PhotoContainer>
       </Container>
     </DismissKeyboard>
   );

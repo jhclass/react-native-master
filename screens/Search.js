@@ -28,7 +28,7 @@ const Input = styled.TextInput`
   height: 40px;
   background-color: #fff; */
   background-color: rgba(255, 255, 255, 0.3);
-  width: ${(props) => props.width - 20};
+  width: ${(props) => props.width - 20}px;
   padding: 5px;
   border-radius: 5px;
   color: #fff;
@@ -108,8 +108,8 @@ const Search = ({ navigation }) => {
         <Image
           source={{ uri: photos.file }}
           style={{
-            width: width / numColumns - 4 + "px",
-            height: width / numColumns - 4 + "px",
+            width: width / numColumns - 4,
+            height: width / numColumns - 4,
 
             resizeMode: "cover",
           }}
