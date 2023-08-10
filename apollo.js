@@ -1,9 +1,11 @@
+import { onError } from "@apollo/client/link/error";
 import {
   ApolloClient,
   InMemoryCache,
   createHttpLink,
   makeVar,
 } from "@apollo/client";
+import { createUploadLink } from "apollo-upload-client";
 import { setContext } from "@apollo/client/link/context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -16,7 +18,9 @@ export const tokenVar = makeVar("");
 // });
 // Initialize Apollo Client
 
-const httpLink = createHttpLink({
+const httpLink = createHttpLink({});
+
+const uploadHttpLink = createUploadLink({
   uri: "https://a78c-61-75-87-148.ngrok-free.app/graphql",
 });
 
@@ -27,6 +31,15 @@ const authLink = setContext((_, { headers }) => {
       token: tokenVar(),
     },
   };
+});
+
+const onErrorLink = onError(({ graphQLErrors, networkError }) => {
+  if (graphQLErrors) {
+    console.log(`GraphQL Error: ${graphQLErrors}`);
+  }
+  if (networkError) {
+    console.log(`Network Error: ${networkError}`);
+  }
 });
 
 export const cache = new InMemoryCache({
@@ -42,7 +55,7 @@ export const cache = new InMemoryCache({
 });
 
 const client = new ApolloClient({
-  link: authLink.concat(httpLink),
+  link: authLink.concat(onErrorLink).concat(uploadHttpLink),
   cache: cache,
 });
 export const logUserIn = async (token) => {

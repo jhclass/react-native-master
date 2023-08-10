@@ -38,11 +38,13 @@ export const SelectPhoto = ({ navigation }) => {
   const [ok, setOk] = useState(false);
   const [photos, setPhotos] = useState([]);
   const [chosenPhoto, setChosenPhoto] = useState("");
+  const [photoLocal, setPhotoLocal] = useState("");
   console.log(chosenPhoto, "파일네임뭐냐");
+
   const getPhotos = async () => {
     if (ok) {
       const { assets: photos } = await MediaLibrary.getAssetsAsync();
-      //console.log(photos);
+      console.log(photos);
       setPhotos(photos);
       setChosenPhoto(photos[0]?.uri);
     }
@@ -64,12 +66,15 @@ export const SelectPhoto = ({ navigation }) => {
     navigation.setOptions({
       headerRight: HeaderRight,
     });
-  }, [chosenPhoto]);
+  }, [chosenPhoto, photoLocal]);
   const HeaderRight = () => {
     return (
       <NextBtn
         onPress={() =>
-          navigation.navigate("UploadPhoto", { file: chosenPhoto })
+          navigation.navigate("UploadPhoto", {
+            file1: chosenPhoto,
+            file2: photoLocal,
+          })
         }
       >
         <NextBtnText>다음</NextBtnText>
@@ -89,11 +94,13 @@ export const SelectPhoto = ({ navigation }) => {
     right: 5px;
   `;
 
-  const choosePhoto = (uri) => {
-    if (uri === chosenPhoto) {
+  const choosePhoto = async (uri, id) => {
+    const assetInfo = await MediaLibrary.getAssetInfoAsync(id);
+    if (id === chosenPhoto) {
       setChosenPhoto("");
     } else {
       setChosenPhoto(uri);
+      setPhotoLocal(assetInfo.localUri);
     }
   };
 
@@ -101,7 +108,7 @@ export const SelectPhoto = ({ navigation }) => {
     return (
       <ImageContainer
         style={{ padding: 2 }}
-        onPress={() => choosePhoto(gallery.uri)}
+        onPress={() => choosePhoto(gallery.uri, gallery.id)}
       >
         <Image
           source={{ uri: gallery.uri }}

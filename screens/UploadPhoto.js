@@ -5,6 +5,23 @@ import DismissKeyboard from "../components/DismissKeyboard";
 import { useForm } from "react-hook-form";
 import { colors } from "../colors";
 import { ActivityIndicator } from "react-native";
+import { gql } from "@apollo/client";
+import { FEED_PHOTO } from "../fragments";
+import { useMutation } from "@apollo/client";
+import { ReactNativeFile, createUploadLink } from "apollo-upload-client";
+const UPLOAD_PHOTO_MUTATION = gql`
+  mutation ($file: Upload!, $caption: String) {
+    uploadPhoto(file: $file, caption: $caption) {
+      createdAt
+      user {
+        id
+        username
+      }
+      file
+      caption
+    }
+  }
+`;
 const Container = styled.View`
   flex: 1;
   background-color: black;
@@ -40,13 +57,10 @@ const PhotoContainer = styled.View`
 `;
 
 const UploadPhoto = ({ route, navigation }) => {
+  const [uploadPhotoMutation, { loading }] = useMutation(UPLOAD_PHOTO_MUTATION);
   const HeaderRight = () => {
     return (
-      <NextBtn
-        onPress={() =>
-          navigation.navigate("UploadPhoto", { file: chosenPhoto })
-        }
-      >
+      <NextBtn onPress={handleSubmit(onValid)}>
         <NextBtnText>다음</NextBtnText>
       </NextBtn>
     );
@@ -56,7 +70,7 @@ const UploadPhoto = ({ route, navigation }) => {
   );
   const { register, handleSubmit, watch, setValue } = useForm();
   const { width } = useWindowDimensions();
-  console.log(route, "Filename");
+  console.log(route.params.file2, "Filename");
   //   console.log(navigation);
   useEffect(() => {
     register("caption");
@@ -64,21 +78,40 @@ const UploadPhoto = ({ route, navigation }) => {
 
   useEffect(() => {
     navigation.setOptions({
-      headerRight: HeaderRightLoading,
+      headerRight: loading ? HeaderRightLoading : HeaderRight,
     });
-  }, []);
+  }, [loading]);
+  const onValid = ({ caption }) => {
+    try {
+      const file = new ReactNativeFile({
+        uri: route.params.file2,
+        name: "ghs.jpg",
+        type: "image/jpeg",
+      });
+      console.log(file);
+      uploadPhotoMutation({
+        variables: {
+          caption: caption,
+          file: file,
+        },
+      });
+    } catch (e) {
+      console.error("Error uploading file:", e); // 변수 이름 수정
+    }
+  };
   return (
     <DismissKeyboard>
       <Container>
         <CaptionContainer>
           <Caption
             placeholder="오늘 나의 노력에 대한 소감을 작성하여주세요 🙏"
-            placeholderTextColor="black"
+            placeholderTextColor="rgba(0,0,0,0.5)"
             onChangeText={(text) => setValue("caption", text)}
+            onSubmitEditing={handleSubmit(onValid)}
           />
         </CaptionContainer>
         <PhotoContainer>
-          <Photo source={{ uri: route.params.file }} resizeMode="contain" />
+          <Photo source={{ uri: route.params.file1 }} resizeMode="contain" />
         </PhotoContainer>
       </Container>
     </DismissKeyboard>
