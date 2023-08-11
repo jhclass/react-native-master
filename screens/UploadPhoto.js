@@ -106,6 +106,10 @@ const UploadPhoto = ({ route, navigation }) => {
   }, [loading]);
   const onValid = ({ caption }) => {
     try {
+      if (!caption) {
+        alert("오늘하루도 고생한 나 자신을 위해 소감을 꼭 작성하여주세요! 🙏");
+        return;
+      }
       const file = new ReactNativeFile({
         uri: route.params.file2,
         name: "ghs.jpg",
@@ -127,7 +131,7 @@ const UploadPhoto = ({ route, navigation }) => {
       <Container>
         <CaptionContainer>
           <Caption
-            placeholder="오늘 나의 노력에 대한 소감을 작성하여주세요 🙏"
+            placeholder="오늘 당신의 노력에 대한 소감을 작성하여주세요 🙏"
             placeholderTextColor="rgba(0,0,0,0.5)"
             onChangeText={(text) => setValue("caption", text)}
             onSubmitEditing={handleSubmit(onValid)}

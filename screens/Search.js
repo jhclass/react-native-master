@@ -29,7 +29,7 @@ const Input = styled.TextInput`
   background-color: #fff; */
   background-color: rgba(255, 255, 255, 0.3);
   width: ${(props) => props.width - 20}px;
-  padding: 5px;
+  padding: 10px 20px;
   border-radius: 5px;
   color: #fff;
 `;
