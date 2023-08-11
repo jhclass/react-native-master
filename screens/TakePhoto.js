@@ -113,7 +113,7 @@ export const TakePhoto = ({ navigation }) => {
         exif: true, // meta data
         quality: 1,
       });
-
+      console.log(uri);
       setTakenPhoto(uri);
     }
   };
@@ -125,7 +125,8 @@ export const TakePhoto = ({ navigation }) => {
     // go to upload
     console.log("Will Upload", takenPhoto);
     navigation.navigate("UploadPhoto", {
-      file: takenPhoto,
+      file2: takenPhoto,
+      file1: takenPhoto,
     });
   };
 

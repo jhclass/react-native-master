@@ -94,7 +94,7 @@ const UploadPhoto = ({ route, navigation }) => {
   const { register, handleSubmit, watch, setValue } = useForm();
   const { width } = useWindowDimensions();
   console.log(route.params.file2, "Filename");
-  //   console.log(navigation);
+  console.log(navigation, "네비게이션", route, "라우트");
   useEffect(() => {
     register("caption");
   }, [register]);
