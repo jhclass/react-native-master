@@ -21,7 +21,7 @@ export const tokenVar = makeVar("");
 const httpLink = createHttpLink({});
 
 const uploadHttpLink = createUploadLink({
-  uri: "https://a78c-61-75-87-148.ngrok-free.app/graphql",
+  uri: "https://9f40-61-75-87-148.ngrok-free.app/graphql",
 });
 
 const authLink = setContext((_, { headers }) => {

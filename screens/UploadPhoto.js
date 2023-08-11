@@ -19,6 +19,7 @@ const UPLOAD_PHOTO_MUTATION = gql`
       }
       file
       caption
+      id
     }
   }
 `;
@@ -57,7 +58,29 @@ const PhotoContainer = styled.View`
 `;
 
 const UploadPhoto = ({ route, navigation }) => {
-  const [uploadPhotoMutation, { loading }] = useMutation(UPLOAD_PHOTO_MUTATION);
+  const [uploadPhotoMutation, { loading }] = useMutation(
+    UPLOAD_PHOTO_MUTATION,
+    {
+      update: (cache, result) => {
+        const {
+          data: { uploadPhoto },
+        } = result;
+        console.log(uploadPhoto.id, "결과값으로는 뭐가있을까?");
+        if (uploadPhoto.id) {
+          cache.modify({
+            id: "ROOT_QUERY",
+            fields: {
+              seeFeed(prev) {
+                const newFeed = [uploadPhoto, ...prev];
+                return newFeed;
+              },
+            },
+          });
+          navigation.navigate("Tabs");
+        }
+      },
+    }
+  );
   const HeaderRight = () => {
     return (
       <NextBtn onPress={handleSubmit(onValid)}>
