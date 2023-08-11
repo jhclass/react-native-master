@@ -130,7 +130,9 @@ export const Photo = ({ id, user, caption, file, isLiked, likes, isMine }) => {
     Image.getSize(file, (width, height) => {
       //console.log(width);
       //console.log(height);
-      setImageHeight((height * Swidth) / width);
+      setImageHeight(
+        (height * Swidth) / width > 600 ? 600 : (height * Swidth) / width
+      );
     });
   }, [file]);
   //console.log(dimensions);
@@ -181,7 +183,7 @@ export const Photo = ({ id, user, caption, file, isLiked, likes, isMine }) => {
         ) : null}
       </Header>
       <File
-        resizeMode="cover"
+        resizeMode={imageHeight === 600 ? "contain" : "cover"}
         //style={{ width: Swidth, height: imageHeight }}
         style={{ width: Swidth, height: imageHeight }}
         source={{ uri: file }}

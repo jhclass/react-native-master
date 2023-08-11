@@ -39,14 +39,36 @@ export const SelectPhoto = ({ navigation }) => {
   const [photos, setPhotos] = useState([]);
   const [chosenPhoto, setChosenPhoto] = useState("");
   const [photoLocal, setPhotoLocal] = useState("");
+  const [loadingMore, setLoadingMore] = useState(false);
   console.log(chosenPhoto, "파일네임뭐냐");
 
   const getPhotos = async () => {
-    if (ok) {
-      const { assets: photos } = await MediaLibrary.getAssetsAsync();
-      console.log(photos);
-      setPhotos(photos);
-      setChosenPhoto(photos[0]?.uri);
+    if (ok && !loadingMore) {
+      setLoadingMore(true);
+      const lastPhoto = photos[photos.length - 1];
+      const {
+        assets: newPhotos,
+        hasNextPage,
+        endCursor,
+      } = await MediaLibrary.getAssetsAsync({
+        after: lastPhoto ? lastPhoto.id : undefined,
+      });
+      console.log(
+        photos[newPhotos.length - 1],
+
+        "몇개의 이미지를 불러왔니?"
+      );
+      if (newPhotos.length > 0) {
+        setPhotos((prevPhotos) => [...prevPhotos, ...newPhotos]);
+        setChosenPhoto(newPhotos[0]?.uri);
+      }
+      setLoadingMore(false);
+    }
+  };
+  const handleEndReached = () => {
+    if (photos.length > 0) {
+      const lastPhoto = photos[photos.length - 1];
+      getPhotos(lastPhoto.id); // Pass the last photo's id for pagination
     }
   };
   const getPermissions = async () => {
@@ -143,6 +165,8 @@ export const SelectPhoto = ({ navigation }) => {
           numColumns={4}
           keyExtractor={(item, index) => String(item + index)}
           renderItem={renderItem}
+          onEndReached={handleEndReached}
+          onEndReachedThreshold={0.5}
         />
       </Bottom>
     </Container>
