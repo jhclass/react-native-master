@@ -84,7 +84,6 @@ const Feed = ({ navigation }) => {
   };
 
   const refresh = async () => {
-    //console.log(111111111111111);
     setRefreshing(true);
     await refetch();
     setRefreshing(false);

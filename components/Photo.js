@@ -9,11 +9,12 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
-import { gql, useMutation } from "@apollo/client";
-import { Text } from "react-native";
+import { gql, useMutation, useQuery } from "@apollo/client";
+import { Text, View } from "react-native";
 import LikeAction from "./LikeAction";
 import { colors } from "../colors";
 import { PHOTO_FRAGMENT, COMMENT_FRAGMENT } from "../fragments";
+import Comments from "../screens/Comments";
 
 const DELETE_PHOTO_MUTATION = gql`
   mutation ($deletePhotoId: Int!) {
@@ -98,8 +99,7 @@ const DeleteBtnText = styled.Text`
   color: ${colors.white};
 `;
 export const Photo = ({ id, user, caption, file, isLiked, likes, isMine }) => {
-  //console.log(id);
-  console.log(isMine);
+  console.log("내가 작성했니?", isMine);
   const { width: Swidth } = useWindowDimensions();
   const [imageHeight, setImageHeight] = useState(300);
   const navigation = useNavigation();
@@ -191,7 +191,13 @@ export const Photo = ({ id, user, caption, file, isLiked, likes, isMine }) => {
       <ExtraContainer>
         <Actions>
           <LikeAction isLiked={isLiked} id={id} />
-          <Action>
+          <Action
+            onPress={() =>
+              navigation.navigate("Comments", {
+                photoId: id,
+              })
+            }
+          >
             <Ionicons name="chatbubble-outline" color={"#fff"} size={20} />
           </Action>
         </Actions>
@@ -211,6 +217,9 @@ export const Photo = ({ id, user, caption, file, isLiked, likes, isMine }) => {
           <Username onPress={goToProfile}>{user.username}</Username>
           <CaptionText>{caption}</CaptionText>
         </Caption>
+        <View>
+          <Comments seePhotoCommentsId={id} />
+        </View>
       </ExtraContainer>
     </Container>
   );
