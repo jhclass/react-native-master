@@ -6,6 +6,7 @@ import * as Font from "expo-font";
 import { Asset } from "expo-asset";
 import LoggedOutNav from "./navigator/LoggedOutNav";
 import { LoggedInNav } from "./navigator/loggedInNav";
+import { RecoilRoot } from "recoil";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   DarkTheme,
@@ -81,10 +82,12 @@ export default function App() {
   }
 
   return (
-    <ApolloProvider client={client}>
-      <NavigationContainer>
-        {isLoggedIn ? <LoggedInNav /> : <LoggedOutNav />}
-      </NavigationContainer>
-    </ApolloProvider>
+    <RecoilRoot>
+      <ApolloProvider client={client}>
+        <NavigationContainer>
+          {isLoggedIn ? <LoggedInNav /> : <LoggedOutNav />}
+        </NavigationContainer>
+      </ApolloProvider>
+    </RecoilRoot>
   );
 }

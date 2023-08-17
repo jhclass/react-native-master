@@ -69,6 +69,8 @@ const Actions = styled.View`
 `;
 const Action = styled.TouchableOpacity`
   margin-right: 10px;
+  flex-direction: row;
+  align-items: center;
 `;
 const Caption = styled.View`
   flex-direction: row;
@@ -98,8 +100,18 @@ const DeleteBtn = styled.TouchableOpacity`
 const DeleteBtnText = styled.Text`
   color: ${colors.white};
 `;
-export const Photo = ({ id, user, caption, file, isLiked, likes, isMine }) => {
+export const Photo = ({
+  id,
+  user,
+  caption,
+  file,
+  isLiked,
+  likes,
+  isMine,
+  commentNumber,
+}) => {
   console.log("내가 작성했니?", isMine);
+  console.log("코멘트개수", commentNumber);
   const { width: Swidth } = useWindowDimensions();
   const [imageHeight, setImageHeight] = useState(300);
   const navigation = useNavigation();
@@ -199,6 +211,11 @@ export const Photo = ({ id, user, caption, file, isLiked, likes, isMine }) => {
             }
           >
             <Ionicons name="chatbubble-outline" color={"#fff"} size={20} />
+            {commentNumber > 0 ? (
+              <Text style={{ color: "#fff", marginLeft: 5 }}>
+                {commentNumber}+{" 개의 댓글 모두보기"}
+              </Text>
+            ) : null}
           </Action>
         </Actions>
         {likes > 0 ? (
@@ -218,7 +235,7 @@ export const Photo = ({ id, user, caption, file, isLiked, likes, isMine }) => {
           <CaptionText>{caption}</CaptionText>
         </Caption>
         <View>
-          <Comments seePhotoCommentsId={id} />
+          <Comments seePhotoCommentsId={id} currentLoca={true} />
         </View>
       </ExtraContainer>
     </Container>

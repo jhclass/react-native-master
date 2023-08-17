@@ -86,7 +86,11 @@ export default function StackNavFactory({ screenName }) {
       <Stack.Screen name="Profile" component={Profile} />
       <Stack.Screen name="Photo" component={Photo} />
       <Stack.Screen name="Likes" component={Likes} />
-      <Stack.Screen name="Comments" component={Comments} />
+      <Stack.Screen
+        name="Comments"
+        component={Comments}
+        options={{ headerTitle: "댓글" }}
+      />
     </Stack.Navigator>
   );
 }
