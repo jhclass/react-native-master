@@ -1,6 +1,6 @@
 import React from "react";
 import { PropTypes } from "prop-types";
-import { Ionicons, AntDesign } from "@expo/vector-icons";
+import { Ionicons, AntDesign, MaterialIcons } from "@expo/vector-icons";
 import { Text } from "react-native";
 import styled from "styled-components";
 import { gql, useMutation } from "@apollo/client";
@@ -76,10 +76,10 @@ const LikeAction = ({ id, isLiked }) => {
   });
   return (
     <Action onPress={toggleLikes}>
-      <Ionicons
-        name={isLiked ? "heart" : "heart-outline"}
+      <MaterialIcons
+        name={isLiked ? "thumb-up-alt" : "thumb-up-off-alt"}
         color={isLiked ? "#d42643" : "#fff"}
-        size={20}
+        size={24}
       />
     </Action>
   );

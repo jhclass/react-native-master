@@ -85,7 +85,11 @@ export default function StackNavFactory({ screenName }) {
       {screenName === "Me" ? <Stack.Screen name="Me" component={Me} /> : null}
       <Stack.Screen name="Profile" component={Profile} />
       <Stack.Screen name="Photo" component={Photo} />
-      <Stack.Screen name="Likes" component={Likes} />
+      <Stack.Screen
+        name="Likes"
+        component={Likes}
+        options={{ headerTitle: "당신을 응원합니다. 👍" }}
+      />
       <Stack.Screen
         name="Comments"
         component={Comments}

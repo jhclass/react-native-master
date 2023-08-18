@@ -5,7 +5,7 @@ import { Ionicons, AntDesign } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useForm } from "react-hook-form";
 import { formatDate, defaultProfileImage } from "../helperFunction";
-
+import Reply from "./Reply";
 import {
   View,
   Text,
@@ -19,6 +19,14 @@ import { colors } from "../colors";
 import DismissKeyboard from "../components/DismissKeyboard";
 import { useRecoilState } from "recoil";
 import { setRefresingState } from "../state/state";
+const ME_QUERY = gql`
+  query Me {
+    me {
+      avatar
+      username
+    }
+  }
+`;
 const DELETE_COMMENT_MUTATION = gql`
   mutation DeleteComment($deleteCommentId: Int!) {
     deleteComment(id: $deleteCommentId) {
@@ -32,13 +40,13 @@ const SEEPHOTO_COMMENTS_QUERY = gql`
   query SeePhotoComments($seePhotoCommentsId: Int!) {
     seePhotoComments(id: $seePhotoCommentsId) {
       id
-      payload
+      createdAt
       isMine
+      payload
       user {
         avatar
         username
       }
-      createdAt
     }
   }
 `;
@@ -58,11 +66,23 @@ const CommentContainer = styled.View`
   box-sizing: border-box;
   width: 100%;
   overflow: hidden; /* Add this line */
+  margin-top: 10px;
 `;
 const Avatar = styled.Image`
   width: 20px;
   height: 20px;
   border-radius: 10px;
+`;
+const InputContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 20px;
+`;
+const InputAvatar = styled.Image`
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  margin-right: 10px;
 `;
 
 const CommentText = styled.Text`
@@ -86,13 +106,15 @@ const CommentModifyBtn = styled.View`
 const ReplyContainer = styled.View`
   flex-direction: row;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 4px;
 `;
 const ReplyContainerBtn = styled.TouchableOpacity`
   margin-left: 10px;
 `;
 
 const Comments = ({ navigation, route, seePhotoCommentsId, currentLoca }) => {
+  const { data: meQueryData } = useQuery(ME_QUERY);
+  console.log(meQueryData);
   // console.log(currentLoca);
   if (route?.params?.photoId || seePhotoCommentsId) {
     const { register, handleSubmit, watch, setValue } = useForm();
@@ -186,14 +208,16 @@ const Comments = ({ navigation, route, seePhotoCommentsId, currentLoca }) => {
     };
 
     const renderComments = ({ item: comment }) => {
-      //console.log(comment);
+      //console.log(comment?.id);
+      //console.log(comment.replies, "없닫고?");
+
       return (
         <>
           <CommentContainer>
             <Avatar
               source={
                 comment?.user?.avatar
-                  ? { uri: comment.user.avatar }
+                  ? { uri: comment?.user?.avatar }
                   : defaultProfileImage
               }
             />
@@ -214,20 +238,21 @@ const Comments = ({ navigation, route, seePhotoCommentsId, currentLoca }) => {
           <ReplyContainer>
             <ReplyContainerBtn>
               <Text style={{ color: "rgba(255,255,255,0.5)" }}>
-                {formatDate(+comment.createdAt)}
+                {formatDate(+comment?.createdAt)}
               </Text>
             </ReplyContainerBtn>
-            {comment.isMine ? null : (
+            {comment?.isMine ? null : (
               <ReplyContainerBtn>
                 <Text style={{ color: "rgba(255,255,255,0.5)" }}>댓글쓰기</Text>
               </ReplyContainerBtn>
             )}
-            {comment.isMine ? (
+            {comment?.isMine ? (
               <ReplyContainerBtn onPress={() => onDeleteComment(comment.id)}>
                 <Text style={{ color: "rgba(255,255,255,0.5)" }}>삭제</Text>
               </ReplyContainerBtn>
             ) : null}
           </ReplyContainer>
+          <Reply commentId={comment?.id} currentLoca={currentLoca} />
         </>
       );
     };
@@ -254,7 +279,7 @@ const Comments = ({ navigation, route, seePhotoCommentsId, currentLoca }) => {
               onRefresh={onRefresh}
               data={
                 currentLoca
-                  ? (data?.seePhotoComments).slice(0, 3)
+                  ? (data?.seePhotoComments).slice(0, 2)
                   : data?.seePhotoComments
               }
               keyExtractor={(item, index) => String(item + index)}
@@ -263,7 +288,14 @@ const Comments = ({ navigation, route, seePhotoCommentsId, currentLoca }) => {
             />
           )}
 
-          <View>
+          <InputContainer>
+            <InputAvatar
+              source={
+                meQueryData?.me?.avatar
+                  ? { uri: meQueryData?.me?.avatar }
+                  : defaultProfileImage
+              }
+            />
             <TextInput
               placeholder="댓글을 입력하세요"
               placeholderTextColor={"#111"}
@@ -273,7 +305,6 @@ const Comments = ({ navigation, route, seePhotoCommentsId, currentLoca }) => {
                 padding: 10,
                 width: 320,
                 borderRadius: 10,
-                marginBottom: 20,
               }}
               name="createComment"
               value={watch("createComment")}
@@ -282,7 +313,7 @@ const Comments = ({ navigation, route, seePhotoCommentsId, currentLoca }) => {
               }
               onSubmitEditing={handleSubmit(onValid)}
             />
-          </View>
+          </InputContainer>
         </ViewContainer>
       </DismissKeyboard>
     );

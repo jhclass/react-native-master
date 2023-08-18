@@ -8,7 +8,7 @@ import {
   Alert,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { Ionicons, AntDesign } from "@expo/vector-icons";
+import { Ionicons, AntDesign, MaterialIcons } from "@expo/vector-icons";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import { Text, View } from "react-native";
 import LikeAction from "./LikeAction";
@@ -111,7 +111,7 @@ export const Photo = ({
   commentNumber,
 }) => {
   console.log("내가 작성했니?", isMine);
-  console.log("코멘트개수", commentNumber);
+  //console.log("코멘트개수", commentNumber);
   const { width: Swidth } = useWindowDimensions();
   const [imageHeight, setImageHeight] = useState(300);
   const navigation = useNavigation();
@@ -210,7 +210,11 @@ export const Photo = ({
               })
             }
           >
-            <Ionicons name="chatbubble-outline" color={"#fff"} size={20} />
+            <MaterialIcons
+              name="chat-bubble-outline"
+              color={"#fff"}
+              size={22}
+            />
             {commentNumber > 0 ? (
               <Text style={{ color: "#fff", marginLeft: 5 }}>
                 {commentNumber}+{" 개의 댓글 모두보기"}
@@ -225,7 +229,7 @@ export const Photo = ({
                 navigation.navigate("Likes", { photoId: id });
               }}
             >
-              {`${likes}개의 공감을 받았습니다.`}
+              {`${likes}개의 응원을 받았습니다.`}
             </LikeNumber>
           </TouchableOpacity>
         ) : null}
