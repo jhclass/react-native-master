@@ -1,6 +1,6 @@
 import { PropTypes } from "prop-types";
-import { gql, useMutation, useQuery, useEffect } from "@apollo/client";
-import React, { useState } from "react";
+import { gql, useMutation, useQuery } from "@apollo/client";
+import React, { useRef, useState, useEffect } from "react";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useForm } from "react-hook-form";
@@ -59,6 +59,15 @@ const CREATE_COMMENT_MUTATION = gql`
     }
   }
 `;
+const CREATE_REPLY_COMMENT_MUTATION = gql`
+  mutation CreateReplyComment($commentId: Int!, $payload: String!) {
+    createReplyComment(commentId: $commentId, payload: $payload) {
+      error
+      ok
+    }
+  }
+`;
+
 const CommentContainer = styled.View`
   padding: 2px;
   align-items: flex-start;
@@ -96,25 +105,25 @@ const CommentUser = styled.Text`
   color: ${colors.blue};
   font-weight: 600;
 `;
-
 const CommentModifyBtn = styled.View`
   flex-direction: row;
   justify-content: flex-end;
-
   align-items: center;
 `;
+
 const ReplyContainer = styled.View`
   flex-direction: row;
   align-items: center;
   margin-bottom: 4px;
 `;
+
 const ReplyContainerBtn = styled.TouchableOpacity`
   margin-left: 10px;
 `;
 
 const Comments = ({ navigation, route, seePhotoCommentsId, currentLoca }) => {
   const { data: meQueryData } = useQuery(ME_QUERY);
-  console.log(meQueryData);
+  //console.log(meQueryData);
   // console.log(currentLoca);
   if (route?.params?.photoId || seePhotoCommentsId) {
     const { register, handleSubmit, watch, setValue } = useForm();
@@ -143,6 +152,13 @@ const Comments = ({ navigation, route, seePhotoCommentsId, currentLoca }) => {
               },
             });
           }
+        },
+      });
+
+    const [createReplyComment, { loading: createReplyCommentLoading }] =
+      useMutation(CREATE_REPLY_COMMENT_MUTATION, {
+        onCompleted: (data) => {
+          console.log(data);
         },
       });
     const [deleteCommentMutation, { loading: deleteCommentLoading }] =
@@ -185,20 +201,48 @@ const Comments = ({ navigation, route, seePhotoCommentsId, currentLoca }) => {
           },
         });
       }
-    }; //const [refreshing, setReFreshing] = useState(false);
+    };
+    //const [refreshing, setReFreshing] = useState(false);
     const [refreshing, setRefreshing] = useRecoilState(setRefresingState);
+    const [replies, setReplies] = useState(0);
+    const [repliesState, setRepliesState] = useState(false);
+    const createCommentsForm = useRef();
+    const replyNum = (data) => {
+      setRepliesState(true);
 
+      setReplies(data);
+      createCommentsForm?.current?.focus();
+    };
+    const handleInputBlur = async () => {
+      setRepliesState(false);
+    };
+    useEffect(() => {
+      console.log(repliesState, "input 상태");
+    }, [repliesState]);
     const onValid = (data) => {
-      console.log(data);
+      //console.log(data, "데이터를 알려줘");
+      //console.log(replies, "현재 댓글의 번호를 알려줘");
+      if (repliesState) {
+        //console.log(replies);
+        //해당 댓글의 댓글 생성
+        createReplyComment({
+          variables: {
+            commentId: replies,
+            payload: data.createComment,
+          },
+        });
+        setRepliesState(false);
+      } else {
+        createCommentMutation({
+          variables: {
+            photoId: route?.params?.photoId
+              ? route?.params?.photoId
+              : seePhotoCommentsId,
+            payload: data.createComment,
+          },
+        });
+      }
 
-      createCommentMutation({
-        variables: {
-          photoId: route?.params?.photoId
-            ? route?.params?.photoId
-            : seePhotoCommentsId,
-          payload: data.createComment,
-        },
-      });
       setValue("createComment", "");
     };
     const onRefresh = async () => {
@@ -242,7 +286,7 @@ const Comments = ({ navigation, route, seePhotoCommentsId, currentLoca }) => {
               </Text>
             </ReplyContainerBtn>
             {comment?.isMine ? null : (
-              <ReplyContainerBtn>
+              <ReplyContainerBtn onPress={() => replyNum(comment?.id)}>
                 <Text style={{ color: "rgba(255,255,255,0.5)" }}>댓글쓰기</Text>
               </ReplyContainerBtn>
             )}
@@ -297,6 +341,7 @@ const Comments = ({ navigation, route, seePhotoCommentsId, currentLoca }) => {
               }
             />
             <TextInput
+              ref={createCommentsForm}
               placeholder="댓글을 입력하세요"
               placeholderTextColor={"#111"}
               style={{
@@ -308,6 +353,7 @@ const Comments = ({ navigation, route, seePhotoCommentsId, currentLoca }) => {
               }}
               name="createComment"
               value={watch("createComment")}
+              onBlur={handleInputBlur}
               onChangeText={(text) =>
                 setValue("createComment", text.replace(/[\n\s]/g, ""))
               }
