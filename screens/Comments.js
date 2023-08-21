@@ -216,9 +216,9 @@ const Comments = ({ navigation, route, seePhotoCommentsId, currentLoca }) => {
     const handleInputBlur = async () => {
       setRepliesState(false);
     };
-    useEffect(() => {
-      console.log(repliesState, "input 상태");
-    }, [repliesState]);
+    // useEffect(() => {
+    //   console.log(repliesState, "input 상태");
+    // }, [repliesState]);
     const onValid = (data) => {
       //console.log(data, "데이터를 알려줘");
       //console.log(replies, "현재 댓글의 번호를 알려줘");
