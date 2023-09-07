@@ -52,18 +52,21 @@ const CloseBtn = styled.TouchableOpacity`
 `;
 const Reply = ({ commentId, currentLoca }) => {
   //console.log(commentId);
+  const [refreshing, setRefreshing] = useRecoilState(setRefresingState);
   const { data, loading, refetch } = useQuery(SEE_REPLY_COMMENT, {
     variables: {
       commentId: commentId,
     },
   });
+
   refetch(); //업데이트 앱 사용량 증가시 보완필요
   const { seeReplyComment } = data || {}; // data 객체가 존재하는지 확인한 후에 렌더링하도록 변경
   if (seeReplyComment === null) {
     return;
   }
-  console.log(data, "replyData");
-  const [refreshing, setRefreshing] = useRecoilState(setRefresingState);
+
+  //console.log(data, "replyData");
+
   const onRefresh = async () => {
     setRefreshing(true);
     await refetch();

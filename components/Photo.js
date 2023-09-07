@@ -155,6 +155,7 @@ export const Photo = ({
     navigation.navigate("Profile", {
       username: user.username,
       id: user.id,
+      avatar: user.avatar,
     });
   };
   const onDelete = () => {
