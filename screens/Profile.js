@@ -83,10 +83,10 @@ const Profile = ({ navigation, route }) => {
   if (error) {
     console.error("Error fetching profile:", error.message);
   }
-  //console.log(meQuery?.me?.username, "me data");
-  //console.log(navigation);
-  //console.log(route.params.username, "aaa");
-  console.log(seeProfileQuery.seeProfile.photos.length, "asdfasdf");
+  console.log(meQuery?.me?.username, "me data");
+  console.log(navigation);
+  console.log(route.params.username, "aaa");
+  console.log(seeProfileQuery?.seeProfile?.photos, "asdfasdf");
 
   useEffect(() => {
     if (route?.params?.username) {
@@ -108,13 +108,20 @@ const Profile = ({ navigation, route }) => {
   const renderPhoto = ({ item }) => {
     // console.log(item);
     return (
-      <View style={{ padding: 5 }}>
+      <TouchableOpacity
+        onPress={() =>
+          navigation.navigate("Photo", {
+            photoId: item.id,
+          })
+        }
+        style={{ padding: 5 }}
+      >
         <Image
           resizeMode="cover"
           source={{ uri: item?.file }}
           style={{ width: width / 3 - 10, height: width / 3 - 10 }}
         />
-      </View>
+      </TouchableOpacity>
     );
   };
   return (
@@ -130,8 +137,8 @@ const Profile = ({ navigation, route }) => {
           <UserAvatar
             resizeMode="cover"
             source={
-              route.params.avatar
-                ? { uri: route.params.avatar }
+              route?.params?.avatar
+                ? { uri: route?.params?.avatar }
                 : defaultProfileImage
             }
             style={{
@@ -151,7 +158,7 @@ const Profile = ({ navigation, route }) => {
                 게시글 수
               </ProfileRightText>
               <ProfileRightText style={{ color: "#fff" }}>
-                {seeProfileQuery.seeProfile.photos.length}{" "}
+                {seeProfileQuery?.seeProfile?.photos.length}{" "}
               </ProfileRightText>
             </ProfileRightCountBox>
             <ProfileRightCountBox>
@@ -167,7 +174,7 @@ const Profile = ({ navigation, route }) => {
                 팔로우
               </ProfileRightText>
               <ProfileRightText style={{ color: "#fff" }}>
-                {seeProfileQuery.seeProfile.totalFollower}{" "}
+                {seeProfileQuery?.seeProfile?.totalFollower}{" "}
               </ProfileRightText>
             </ProfileRightCountBox>
             <ProfileRightCountBox>
@@ -175,7 +182,7 @@ const Profile = ({ navigation, route }) => {
                 팔로잉
               </ProfileRightText>
               <ProfileRightText style={{ color: "#fff" }}>
-                {seeProfileQuery.seeProfile.totalFollowing}{" "}
+                {seeProfileQuery?.seeProfile?.totalFollowing}{" "}
               </ProfileRightText>
             </ProfileRightCountBox>
           </ProfileRightBottom>
@@ -199,7 +206,7 @@ const Profile = ({ navigation, route }) => {
           onRefresh={refresh}
           style={{ width: "100%" }}
           renderItem={renderPhoto}
-          data={seeProfileQuery?.seeProfile.photos}
+          data={seeProfileQuery?.seeProfile?.photos}
           keyExtractor={(item, index) => String(index + item)}
           showsVerticalScrollIndicator={false}
           numColumns={3}

@@ -1,12 +1,18 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  RefreshControl,
+  FlatList,
+} from "react-native";
 import { tokenVar, isLoggedInVar, logoutFunc } from "../apollo";
 import { gql, useQuery } from "@apollo/client";
 import { COMMENT_FRAGMENT, PHOTO_FRAGMENT } from "../fragments";
 import { ScrollView } from "react-native";
 import { Photo } from "../components/Photo";
 import { ViewContainer } from "../components/ViewContainer";
-import { RefreshControl } from "react-native";
+
 const SEE_PHOTO_QUERY = gql`
   query ($seePhotoId: Int!) {
     seePhoto(id: $seePhotoId) {
@@ -43,23 +49,22 @@ const PhotoScreen = ({ navigation, route }) => {
     await refetch();
     setRefreshing(false);
   };
-  //console.log(route?.params?.photoId);
+  console.log(route?.params?.photoId, "이거모른다고?");
   //console.log(data.seePhoto);
   return (
     <ViewContainer loading={loading}>
-      <ScrollView
+      <FlatList
+        data={[data?.seePhoto]} // FlatList expects an array, so we pass the photo data as an array with a single element
+        renderItem={({ item }) => <Photo {...item} />} // We spread the photo data into the Photo component
+        keyExtractor={(item) => item?.id.toString()} // We use the photo ID as the key
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
-        style={{ backgroundColor: "#000" }}
         contentContainerStyle={{
           backgroundColor: "#000",
-          alignItems: "center",
-          justifyContent: "center",
         }}
-      >
-        <Photo {...data?.seePhoto} />
-      </ScrollView>
+        style={{ width: "100%" }}
+      />
     </ViewContainer>
   );
 };

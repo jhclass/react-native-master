@@ -139,13 +139,19 @@ export const Photo = ({
     ],
   });
   useEffect(() => {
-    Image.getSize(file, (width, height) => {
-      //console.log(width);
-      //console.log(height);
-      setImageHeight(
-        (height * Swidth) / width > 600 ? 600 : (height * Swidth) / width
-      );
-    });
+    Image.getSize(
+      file,
+      (width, height) => {
+        //console.log(width);
+        //console.log(height);
+        setImageHeight(
+          (height * Swidth) / width > 600 ? 600 : (height * Swidth) / width
+        );
+      },
+      (error) => {
+        console.error("이미지로딩에러:", error);
+      }
+    );
   }, [file]);
   //console.log(dimensions);
 
@@ -153,9 +159,9 @@ export const Photo = ({
   const defaultProfileImage = require("../assets/default_profile.png");
   const goToProfile = () => {
     navigation.navigate("Profile", {
-      username: user.username,
-      id: user.id,
-      avatar: user.avatar,
+      username: user?.username,
+      id: user?.id,
+      avatar: user?.avatar,
     });
   };
   const onDelete = () => {
@@ -183,10 +189,10 @@ export const Photo = ({
         <UserContainer onPress={goToProfile}>
           <UserAvatar
             resizeMode="cover"
-            source={user.avatar ? { uri: user.avatar } : defaultProfileImage}
+            source={user?.avatar ? { uri: user?.avatar } : defaultProfileImage}
             style={{ width: 40, height: 40, borderRadius: 25 }}
           />
-          <Username>{user.username}</Username>
+          <Username>{user?.username}</Username>
         </UserContainer>
         {isMine ? (
           <DeleteBtn onPress={onDelete}>
@@ -236,7 +242,7 @@ export const Photo = ({
         ) : null}
 
         <Caption>
-          <Username onPress={goToProfile}>{user.username}</Username>
+          <Username onPress={goToProfile}>{user?.username}</Username>
           <CaptionText>{caption}</CaptionText>
         </Caption>
         <View>
@@ -250,6 +256,7 @@ export const Photo = ({
 Photo.propTypes = {
   id: PropTypes.number.isRequired,
   user: PropTypes.shape({
+    id: PropTypes.number.isRequired,
     avatar: PropTypes.string,
     username: PropTypes.string.isRequired,
   }),
